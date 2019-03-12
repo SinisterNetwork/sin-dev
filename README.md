@@ -1,2 +1,2 @@
 # sin-dev
-Development for SinNetwork
+Skript Development for SinNetwork
