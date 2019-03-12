@@ -1,0 +1,149 @@
+# Main Menu
+# Version 1.0
+
+on load:
+    resetGameCore()
+    initGames("skywars", 18, 3, 8)
+
+on join:
+    resetPlayerData(player)
+
+
+function resetPlayerData(p: player):
+    set {_uuid} to uuid of {_p}
+    if {player::%{_p}%} is not set:
+        set {player::%{_p}%} to {_uuid}
+    if {leplayer::%{_uuid}%} is not set:
+        set {leplayer::%{_uuid}%} to {_p}
+
+# ######
+# Util #
+# ######
+function singleSound(sound: text, p: player, pitch: number, volume: number):
+    play sound "%{_sound}%" with volume {_volume} with pitch {_pitch} at location of {_p} for {_p}
+
+function multiSound(sound: text, p: objects, pitch: number, volume: number):
+    loop {_p::*}:
+        play sound "%{_sound}%" with volume {_volume} with pitch {_pitch} at location of loop-value for loop-value
+
+function generalReadyPlayer(p: player):
+	wait 2 ticks
+	heal {_p}
+	clear the inventory of {_p}
+	set {_p}'s gamemode to adventure
+
+function sendTitleToList(title: text, subtitle: text, players: objects):
+    replace all "&" in {_title} with "\\u00a7"
+    replace all "&" in {_subtitle} with "\\u00a7"
+    loop {_players::*}:
+        console command "/execute @e[type=armor_stand,name=anchor,c=1] ~ ~ ~ title %loop-value% times 2 40 2"
+        console command "/execute @e[type=armor_stand,name=anchor,c=1] ~ ~ ~ title %loop-value% title ""%{_title}%"""
+        console command "/execute @e[type=armor_stand,name=anchor,c=1] ~ ~ ~ title %loop-value% subtitle ""%{_subtitle}%"""
+
+function clearTitleToList(players: objects):
+    loop {_players::*}:
+        console command "/execute @e[type=armor_stand,name=anchor] ~ ~ ~ title %loop-value% clear"
+
+
+# #######
+function resetGameCore():
+    delete {games::*}
+    set {games::manager} to true
+    set {games::repo} to true
+    add "skywars" to {games::repo::*}
+
+function initGames(game: text, count: number, minqueue: number, maxqueue: number):
+    if {games::repo::*} contains {_game}:
+        set {games::manager::%{_game}%} to true
+        initMatches({_game}, {_count}, {_minqueue}, {_maxqueue})
+        if {_game} is "skywars":
+            set {_itemp} to diamond named "&6Skywars!"
+            set line 1 of {_itemp}'s lore to "&7Engage in &acompetitive battle!"
+            set {games::manager::skywars::item} to {_itemp}
+
+function initMatches(game: text, count: number, minqueue: number, maxqueue: number):
+    set {_start} to 1
+    while {_start} <= {_count}:
+        set {games::manager::%{_game}%::match%{_start}%} to true
+        set {games::manager::%{_game}%::match%{_start}%::minqueue} to {_minqueue}
+        set {games::manager::%{_game}%::match%{_start}%::maxqueue} to {_maxqueue}
+        set {games::manager::%{_game}%::match%{_start}%::label} to {_start}
+        set {games::manager::%{_game}%::match%{_start}%::queued} to true
+        set {games::manager::%{_game}%::match%{_start}%::state} to 0
+        add 1 to {_start}
+
+function translateShortToLong(game: text) :: text:
+    if {_game} is "skywars":
+        return "Skywars"
+
+command /queue:
+    trigger:
+        openQueueMenu(player)
+
+command /leave:
+    trigger:
+        removePlayerFromAllQueues(player)
+        toSpawn(player)
+        send "&7You were &cremoved &7from all queues."
+        singleSound("ui.button.click", player, 1, 10)
+
+function toSpawn(p: player):
+    set {_epic} to the location (52, 10, 377) in world "world"
+    set {_epic}'s yaw to 180
+    set {_epic}'s pitch to 0.001
+    teleport {_p} to {_epic}
+
+function removePlayerFromAllQueues(p: player):
+    loop {games::manager::*}:
+        loop {games::manager::%loop-index%::*}:
+            if {games::manager::%loop-index-1%::%loop-index-2%::queued::*} contains {_p}:
+                remove {_p} from {games::manager::%loop-index-1%::%loop-index-2%::queued::*}
+
+function openQueueMenu(p: player):
+    open virtual chest inventory with 6 rows named "&c&nGame Selector" for {_p}
+    set {_slot} to 10
+    loop {games::manager::*}:
+        if {games::manager::%loop-index%::item} is set:
+            format gui slot {_slot} of {_p} with {games::manager::%loop-index%::item} to close then run function openNestedMenu(loop-index, {_p})
+            add 1 to {_slot}
+
+function openNestedMenu(word: text, p: player):
+    open virtual chest inventory with 4 rows named "&c&nSkywars Games" for {_p}
+    set {_slot} to 0
+    loop {games::manager::%{_word}%::*}:
+        if {games::manager::%{_word}%::%loop-index%::label} is set:
+            set {_sw} to nether star named "&6Game %{games::manager::%{_word}%::%loop-index%::label}%"
+            set line 1 of {_sw}'s lore to "&eClick to Join"
+            format gui slot {_slot} of {_p} with {_sw} to close then run function gameQueue({_word}, loop-index, {_p})
+            add 1 to {_slot}
+
+function gameQueue(game: text, word: text, p: player):
+    set {_pass} to true
+    if size of {games::manager::%{_game}%::%{_word}%::queued::*} >= {games::manager::%{_game}%::%{_word}%::maxqueue}:
+        send "&cThe queue for this match was full." to {_p}
+        singleSound("entity.villager.no", {_p}, 1, 10)
+        set {_pass} to false
+    else if {games::manager::%{_game}%::%{_word}%::state} >= 3:
+        send "&cThis match has already started." to {_p}
+        singleSound("entity.villager.no", {_p}, 1, 10)
+        set {_pass} to false
+    else if {games::manager::%{_game}%::%{_word}%::queued::*} contains {_p}:
+        send "&cYou are already queued for this match!" to {_p}
+        singleSound("entity.villager.no", {_p}, 1, 10)
+        set {_pass} to false
+    if {_pass} is true:
+        addToQueue({_p}, {_game}, {_word})
+        if {_game} is "skywars":
+            generalReadyPlayer({_p})
+            teleport {_p} to the location (500, 200, 500) in world "world"
+
+function addToQueue(p: player, game: text, match: text):
+    add {_p} to {games::manager::%{_game}%::%{_match}%::queued::*}
+    set {_current} to size of {games::manager::%{_game}%::%{_match}%::queued::*}
+    set {_max} to {games::manager::%{_game}%::%{_match}%::maxqueue}
+    set {player::%{_p}%::game} to {_game}
+    set {player::%{_p}%::match} to {_match}
+    loop {games::manager::%{_game}%::%{_match}%::queued::*}:
+        send "&a%{_p}% &7joined your game. &8(&e%{_current}%/%{_max}%&8)" to loop-value
+        singleSound("ui.button.click", loop-value, 1, 10)
+    send "&7Use &c/leave &7to leave the game" to {_p}
