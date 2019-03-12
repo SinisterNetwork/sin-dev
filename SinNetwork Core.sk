@@ -1,0 +1,282 @@
+options:
+    prefix: &8[&c&lSinister &4&lNetwork&8]
+    ScoreboardName: &c&lSinister &4&lNetwork
+
+on load:
+ set {tag.beta} to "&dBeta"
+ set {tag.blessed} to "&3Blessed"
+ set {tag.eclipsed} to "&5Eclipsed"
+ set {tag.hacker} to "&7Hacker"
+ set {tag.big spender} to "&aBig &2Spender"
+
+ set {rank.builder} to "&d[BUILD TEAM] &d"
+ set {rank.jrmod} to "&e[JR.MOD] &e"
+ set {rank.mod} to "&e[MOD] &e"
+ set {rank.srmod} to "&6[SR.MOD] &6"
+ set {rank.admin} to "&c[ADMIN] &c"
+ set {rank.youtuber} to "&c[&fYOUTUBE&c] &c"
+ set {rank.owner} to "&3[OWNER] &3"
+ set {rank.vip} to "&2[VIP] &2"
+ set {rank.mvp} to "&b[MVP] &b"
+
+every second:
+    loop all players:
+        set tab header to "&8&m------------------%nl%&r       &c&lSinister &4&lNetwork    %nl%   &6Beta Version 1.0%nl%&8&m------------------" and footer to "&8&m------------------" for loop-player
+        set loop-player tab name to "&7%loop-player%"
+        if {tag::%loop-player's uuid%} is set:
+            if {tag.%{tag::%loop-player's uuid%}%} is not set:
+                remove {tag::%loop-player's uuid%} from {tags::%loop-player's uuid%::*}
+                delete {tag::%loop-player's uuid%}
+        if {rank::%loop-player's uuid%} is set:
+            set loop-player tab name to "%{rank.%{rank::%loop-player's uuid%}%}%%loop-player%"
+            if {rank.%{rank::%loop-player's uuid%}%} is not set:
+                delete {rank::%loop-player's uuid%}
+        if {vanish::%loop-player's uuid%} is set:
+            set loop-player tab name to "&7[HIDDEN] &7&o%loop-player%"
+            loop all players:
+                if loop-player-2 does not have permission "mod":
+                    hide loop-player-1 from loop-player-2
+                if loop-player-2 has permission "mod":
+                    reveal loop-player-1 to loop-player-2
+        if {vanish::%loop-player's uuid%} is not set:
+            reveal loop-player to all players
+            {rank::%loop-player's uuid%} is not set
+            {tag::%loop-player's uuid%} is not set
+            set loop-player tab name to "&7%loop-player%"
+
+on join:
+    teleport player to {spawn}
+    if {joined::%player's uuid%} is not set:
+        set {joined::%player's uuid%} to true
+        set {_msg} to "&b%player% &cWelcome to Sinister Network &b[##%number of all offline players%]"
+    else if {joined::%player's uuid%} is set:
+        set {_msg} to "&b%player% &7has joined the server."
+    set join message to {_msg}
+
+on quit:
+    set quit message to ""
+    if {vanish::%player's uuid%} is set:
+        loop all players:
+            loop-player has permission "mod"
+            send "&7[SILENT] &b%player% &7has left the server." to loop-player
+        delete {vanish::%player's uuid%}
+    else if {vanish::%player's uuid%} is not set:
+        send "&b%player% &7has left the server." to all players
+
+on chat:
+    cancel event
+    loop all players:
+        message contains "@%loop-player%"
+        replace all "@%loop-player%" with "&b@%loop-player%&r" in message
+        play "block_note_pling" to loop-player at volume 1
+    if {tag::%player's uuid%} is set:
+        set {_s} to "%{tag.%{tag::%player's uuid%}%}%"
+        if {rank::%player's uuid%} is not set:
+            send "&7%player% &8[%{_s}%&8]: &7%message%" to all players
+        else if {rank::%player's uuid%} is set:
+            send "%{rank.%{rank::%player's uuid%}%}%%player% &8[%{_s}%&8]: &f%message%" to all players
+    else if {tag::%player's uuid%} is not set:
+        if {rank::%player's uuid%} is not set:
+            send "&7%player%&8: &7%message%" to all players
+        else if {rank::%player's uuid%} is set:
+            send "%{rank.%{rank::%player's uuid%}%}%%player%&8: &f%message%" to all players
+
+every 2 seconds:
+    loop all players:
+        wipe loop-player's sidebar
+        set name of sidebar of loop-player to "{@ScoreboardName}"
+        set score "&6Welcome %loop-player%" in sidebar of loop-player to 9
+        set score "" in sidebar of loop-player to 8
+        set {_online} to number of all players
+        set score "&c%{_online}%&4/10" in sidebar of loop-player to 5
+
+
+command /tag [<offlineplayer>] [<text>]:
+    permission: staff.tags
+    trigger:
+        if arg 1 and arg 2 is not set:
+            send "&c/tag [player] [tag]"
+        else if arg 1 and arg 2 is set:
+            if {tag.%arg 2%} is not set:
+                send "&cThat tag does not exist."
+            else if {tag.%arg 2%} is set:
+                remove arg 2 from {tags::%arg 1's uuid%::*}
+                add arg 2 to {tags::%arg 1's uuid%::*}
+                set {tag::%arg 1's uuid%} to arg 2
+                send "&7You have equiped %{tag.%{tag::%arg 1's uuid%}%}% &7tag." to arg 1
+
+command /tags [<text>]:
+    trigger:
+        open virtual chest inventory with size 3 named "&8%player%'s tags" to player
+        format gui slot 25 of player with cobweb named "&c&lDisable Tag" with lore "&7Right Click to disable your tag." to run:
+            close player's inventory
+            send "&7You have disabled %{tag.%{tag::%player's uuid%}%}% &7tag."
+            delete {tag::%player's uuid%}
+        format gui slot 26 of player with diamond named "&b&lPurchase Tags" with lore "&7Right Click to visit our purchasable tags." to run:
+            close player's inventory
+            send "<link:http://gingsmp.buycraft.net/category/1240521>&7Click here to visit our purchasable tags."
+        set {_num} to 0
+        loop {tags::%player's uuid%::*}:
+            set {_lv%{_num}%} to loop-value
+            format gui slot {_num} of player with name tag named "%{%loop-value%}% &7tag" with lore "&7Click to enable &8[%{%loop-value%}%&8]" to run:
+                close player's inventory
+                console command "/tag %player% %{_lv%{_num}%}%"
+            add 1 to {_num}
+
+command /rank [<offlineplayer>] [<text>]:
+    permission: admin
+    permission message: &cYou don't have access to that command.
+    trigger:
+        if arg 2 is not set:
+            send "&c/rank <player> <rank>"
+        else if arg 2 is set:
+            if {joined::%arg 1's uuid%} is not set:
+                send "&cThat player has never joined."
+            else if {joined::%arg 1's uuid%} is set:
+                if arg 2 is "default":
+                    delete {rank::%arg 1's uuid%}
+                    send "&7You have removed &b%arg 1%'s &7rank."
+                else if arg 2 is not "default":
+                    if {rank.%arg 2%} is not set:
+                        send "&cThat rank does not exist."
+                    else if {rank.%arg 2%} is set:
+                        set {rank::%arg 1's uuid%} to arg 2
+                        send "&7You have updated &b%arg 1%'s &7rank to %{rank.%arg 2%}%"
+
+command /gmc [<offlineplayer>] [<text>]:
+    permission: staff.gmc
+    permission message: &cYou don't have access to that command
+    trigger:
+        if arg 1 is not set:
+            set player's gamemode to creative
+            send "&7Your mode has been updated to &bCreative&7."
+        else if arg 1 is set:
+            if arg 1 is offline:
+                send "&cThat player is offline."
+            else if arg 1 is online:
+                set arg 1's gamemode to creative
+                send "&7%arg 1%'s mode has been updated to &bCreative&7."
+
+command /gms [<offlineplayer>] [<text>]:
+    permission: staff.gms
+    permission message: &cYou don't have access to that command
+    trigger:
+        if arg 1 is not set:
+            set player's gamemode to survival
+            send "&7Your mode has been updated to &bSurvival&7."
+        else if arg 1 is set:
+            if arg 1 is offline:
+                send "&cThat player is offline."
+            else if arg 1 is online:
+                set arg 1's gamemode to survival
+                send "&7%arg 1%'s mode has been updated to &bSurvival&7."
+
+command /gma [<offlineplayer>] [<text>]:
+    permission: admin
+    permission message: &cYou don't have access to that command
+    trigger:
+        if arg 1 is not set:
+            set player's gamemode to adventure
+            send "&7Your mode has been updated to &bAdventure&7."
+        else if arg 1 is set:
+            if arg 1 is offline:
+                send "&cThat player is offline."
+            else if arg 1 is online:
+                set arg 1's gamemode to adventure
+                send "&7%arg 1%'s mode has been updated to &bAdventure&7."
+
+command /gmsp [<offlineplayer>] [<text>]:
+    permission: staff.gmsp
+    permission message: &cYou don't have access to that command
+    trigger:
+        if arg 1 is not set:
+            set player's gamemode to spectator
+            send "&7Your mode has been updated to &bSpectator&7."
+        else if arg 1 is set:
+            if arg 1 is offline:
+                send "&cThat player is offline."
+            else if arg 1 is online:
+                set arg 1's gamemode to spectator
+                send "&7%arg 1%'s mode has been updated to &bSpectator&7."
+
+# Useful Commands
+# Version 1.0
+
+command /fly:
+    permission: staff.fly
+    permission message: &cYou don't have access to that command.
+    trigger:
+        if {fly.%player%} is not set:
+            send "&aFlight mode is on"
+            set {fly.%player%} to true
+            set player's flight mode to true
+        else:
+            send "&cFlight mode is off"
+            reset {fly.%player%}
+            set player's flight mode to false
+
+command /discord:
+    trigger:
+        send "&cJoin the discord <link:https://discord.gg/XFKyxnV>&chere<reset>"
+
+command /forums:
+    trigger:
+        send "&cClick <link:https://sinnetwork.forums.gg/>&ehere<reset> &cfor the forums"
+
+
+# Staff Commands
+# Version 1.0
+
+command /vanish [<text>]:
+    permission: mod
+    permission message: &cYou don't have access to that command.
+    trigger:
+        if {vanish::%player's uuid%} is not set:
+            set {vanish::%player's uuid%} to true
+            loop all players:
+                loop-player has permission "mod"
+                send "&b%player% &7has entered Vanish." to loop-player
+        else if {vanish::%player's uuid%} is set:
+            delete {vanish::%player's uuid%}
+            loop all players:
+                loop-player has permission "mod"
+                send "&b%player% &7has left Vanish." to loop-player
+
+command /bc [<text>]:
+    permission: admin
+    permission message: &cYou don't have access to that command
+    trigger:
+        if arg 1 is not set:
+            send "&cYo, you need a message too!"
+        else:
+            broadcast "{@prefix} &f%colored arg-1%"
+
+command /chatclear:
+    permission: staff.cc
+    aliases: /cc
+    trigger:
+        loop 100 times:
+            broadcast ""
+        broadcast "{@prefix} &eChat has been cleared."
+
+command /pc [<text>]:
+    permission: staff.pc
+    permission message: &cYou don't have permission for this command!
+    trigger:
+        if arg 1 is not set:
+            send "&c/pc (msg)"
+        else:
+            broadcast "{@prefix} &f%arg 1%"
+
+command /staffchat [<text>]:
+    aliases: /sc
+    permission: staff.chat
+    trigger:
+        if arg-1 is not set:
+            send "&c/sc (message)"
+        else:
+            if player has permission "staff.chat":
+                sendToStaff(colored arg-1, player)
+function sendToStaff(msg: text, p: player):
+    set {_epic} to uuid of {_p}
+    send "&d[STAFF] %{rank.%{rank::%{_epic}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff.chat"]
