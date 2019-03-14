@@ -214,6 +214,20 @@ command /fly:
             send "&cFlight mode is off"
             reset {fly.%player%}
             set player's flight mode to false
+            
+# The Following will only work on self
+# I need to enable it to work on other players
+command /heal:
+    trigger:
+        heal the players
+        send "&aYou've been healed."
+
+command /feed:
+    trigger:
+        feed the players
+        send "&aYou've been feed."
+###
+###
 
 command /discord:
     trigger:
