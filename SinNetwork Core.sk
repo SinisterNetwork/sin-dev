@@ -231,7 +231,7 @@ command /donorchat [<text>]:
             send "&c/dc (message)"
         else:
             if player has permission "donor.chat":
-                sendToStaff(colored arg-1, player)
+                sendToDonor(colored arg-1, player)
 function sendToDonor(msg: text, p: player):
     set {_fun} to uuid of {_p}
     send "&6[DONOR] %{rank.%{rank::%{_fun}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff.chat"]
