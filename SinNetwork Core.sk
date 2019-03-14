@@ -226,8 +226,8 @@ command /feed:
     trigger:
         feed the players
         send "&aYou've been feed."
-###
-###
+#
+#
 
 command /discord:
     trigger:
