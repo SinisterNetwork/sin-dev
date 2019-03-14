@@ -206,16 +206,17 @@ command /fly:
     permission: staff.fly
     permission message: &cYou don't have access to that command.
     trigger:
-        if {fly.%player%} is not set:
-            send "&aFlight mode is on"
-            set {fly.%player%} to true
-            set player's flight mode to true
-        else:
-            send "&cFlight mode is off"
-            reset {fly.%player%}
-            set player's flight mode to false
-            
-# The Following will only work on self
+        send "&cTemporarily Disabled"
+        # if {fly.%player%} is not set:
+            # send "&aFlight mode is on"
+            # set {fly.%player%} to true
+            # set player's flight mode to true
+        # else:
+            # send "&cFlight mode is off"
+            # reset {fly.%player%}
+            # set player's flight mode to false 
+
+# The following will only work on self
 # I need to enable it to work on other players
 command /heal:
     trigger:
@@ -226,9 +227,13 @@ command /feed:
     trigger:
         feed the players
         send "&aYou've been feed."
+
 #
 #
 
+command /nick:
+    trigger:
+        send "&cTemporarily Disabled"
 command /discord:
     trigger:
         send "&cJoin the discord <link:https://discord.gg/XFKyxnV>&chere<reset>"
@@ -236,15 +241,15 @@ command /discord:
 command /forums:
     trigger:
         send "&cClick <link:https://sinnetwork.forums.gg/>&ehere<reset> &cfor the forums"
-        
+
 command /donorchat [<text>]:
     aliases: /dc
     permission: donor.chat
     trigger:
         if arg-1 is not set:
-            send "&c/dc (message)"
+            send "&c/sc (message)"
         else:
-            if player has permission "donor.chat":
+            if player has permission "staff.chat":
                 sendToDonor(colored arg-1, player)
 function sendToDonor(msg: text, p: player):
     set {_fun} to uuid of {_p}
