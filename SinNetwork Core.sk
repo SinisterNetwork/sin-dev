@@ -92,7 +92,7 @@ every 2 seconds:
 
 
 command /tag [<offlineplayer>] [<text>]:
-    permission: staff.tags
+    permission: admin
     trigger:
         if arg 1 and arg 2 is not set:
             send "&c/tag [player] [tag]"
@@ -222,6 +222,19 @@ command /discord:
 command /forums:
     trigger:
         send "&cClick <link:https://sinnetwork.forums.gg/>&ehere<reset> &cfor the forums"
+        
+command /donorchat [<text>]:
+    aliases: /dc
+    permission: donor.chat
+    trigger:
+        if arg-1 is not set:
+            send "&c/dc (message)"
+        else:
+            if player has permission "donor.chat":
+                sendToStaff(colored arg-1, player)
+function sendToStaff(msg: text, p: player):
+    set {_fun} to uuid of {_p}
+    send "&6[DONOR] %{rank.%{rank::%{_fun}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff.chat"]
 
 
 # Staff Commands
