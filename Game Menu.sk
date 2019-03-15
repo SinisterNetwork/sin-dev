@@ -3,7 +3,7 @@
 
 on load:
     resetGameCore()
-    initGames("skywars", 18, 3, 8)
+    initGames("skywars", 9, 3, 8)
 
 on join:
     resetPlayerData(player)
