@@ -69,17 +69,21 @@ on chat:
         message contains "@%loop-player%"
         replace all "@%loop-player%" with "&b@%loop-player%&r" in message
         play "block_note_pling" to loop-player at volume 1
+    set {_person} to player
+    set {_uuid} to uuid of player
+    if {leplayer::%{_uuid}%::nick} is not false:
+        set {_person} to {leplayer::%{_uuid}%::nick}
     if {tag::%player's uuid%} is set:
         set {_s} to "%{tag.%{tag::%player's uuid%}%}%"
         if {rank::%player's uuid%} is not set:
-            send "&7%player% &8[%{_s}%&8]: &7%message%" to all players
+            send "&7%{_person}% &8[%{_s}%&8]: &7%message%" to all players
         else if {rank::%player's uuid%} is set:
-            send "%{rank.%{rank::%player's uuid%}%}%%player% &8[%{_s}%&8]: &f%message%" to all players
+            send "%{rank.%{rank::%player's uuid%}%}%%{_person}% &8[%{_s}%&8]: &f%message%" to all players
     else if {tag::%player's uuid%} is not set:
         if {rank::%player's uuid%} is not set:
             send "&7%player%&8: &7%message%" to all players
         else if {rank::%player's uuid%} is set:
-            send "%{rank.%{rank::%player's uuid%}%}%%player%&8: &f%message%" to all players
+            send "%{rank.%{rank::%player's uuid%}%}%%{_person}%&8: &f%message%" to all players
 
 every 2 seconds:
     loop all players:
@@ -200,7 +204,7 @@ command /gmsp [<offlineplayer>] [<text>]:
                 send "&7%arg 1%'s mode has been updated to &bSpectator&7."
 
 # Useful Commands
-# Version 1.0
+# Version 1.1
 
 command /fly:
     permission: staff.fly
@@ -232,9 +236,32 @@ command /feed:
 #
 #
 
-command /nick:
+command /nick [<text>]:
+    permission: donor.nick
+    permission message: &cYou need to be at least &b[MVP] rank to use this command.
     trigger:
-        send "&cTemporarily Disabled"
+        set {_uuid} to uuid of player
+        if {leplayer::%{_uuid}%::nick} is not set:
+            send "&cAn error occurred. Contact an administrator"
+        else:
+            if arg-1 is not set:
+                set {_whattodo} to "remove"
+            else if arg-1 is "off" or "remove":
+                set {_whattodo} to "remove"
+            else if length of arg-1 is more than 16:
+                set {_whattodo} to "toolong"
+            else:
+                set {_whattodo} to "add"
+            if {_whattodo} is "remove":
+                set {leplayer::%{_uuid}%::nick} to false
+                send "&7You have &cunset &7your &6nickname."
+            else if {_whattodo} is "toolong":
+                send "&cThe nickname can not be longer than 16 characters."
+            else if {_whattodo} is "add":
+                set {leplayer::%{_uuid}%::nick} to uncolored arg-1
+                send "&7You have set your nickname to &e%arg-1%"
+
+
 command /discord:
     trigger:
         send "&cJoin the discord <link:https://discord.gg/XFKyxnV>&chere<reset>"
