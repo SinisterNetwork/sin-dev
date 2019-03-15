@@ -206,15 +206,16 @@ command /fly:
     permission: staff.fly
     permission message: &cYou don't have access to that command.
     trigger:
-        send "&cTemporarily Disabled"
-        # if {fly.%player%} is not set:
-            # send "&aFlight mode is on"
-            # set {fly.%player%} to true
-            # set player's flight mode to true
-        # else:
-            # send "&cFlight mode is off"
-            # reset {fly.%player%}
-            # set player's flight mode to false 
+        if {fly.%player%} is not set:
+            set {fly.%player%} to false
+        if {fly.%player%} is false:
+            send "&aFlight mode is on"
+            set {fly.%player%} to true
+            set player's flight mode to true
+        else:
+            send "&cFlight mode is off"
+            set {fly.%player%} to false
+            set player's flight mode to false
 
 # The following will only work on self
 # I need to enable it to work on other players
