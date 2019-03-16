@@ -4,21 +4,26 @@
 on load:
     resetGameCore()
     initGames("skywars", 9, 3, 8)
+    loop all players:
+        resetPlayerData(loop-player)
 
 on join:
     resetPlayerData(player)
 
-
+# The Cache, where we grab players data from
 function resetPlayerData(p: player):
     set {_uuid} to uuid of {_p}
     if {player::%{_p}%} is not set:
         set {player::%{_p}%} to {_uuid}
     if {leplayer::%{_uuid}%} is not set:
         set {leplayer::%{_uuid}%} to {_p}
+    if {leplayer::%{_uuid}%::nick} is not set:
+        set {leplayer::%{_uuid}%::nick} to false
 
 # ######
 # Util #
 # ######
+
 function singleSound(sound: text, p: player, pitch: number, volume: number):
     play sound "%{_sound}%" with volume {_volume} with pitch {_pitch} at location of {_p} for {_p}
 
@@ -76,7 +81,7 @@ function translateShortToLong(game: text) :: text:
     if {_game} is "skywars":
         return "Skywars"
 
-command /queue:
+command /menu:
     trigger:
         openQueueMenu(player)
 
@@ -135,7 +140,35 @@ function gameQueue(game: text, word: text, p: player):
         addToQueue({_p}, {_game}, {_word})
         if {_game} is "skywars":
             generalReadyPlayer({_p})
-            teleport {_p} to the location (500, 200, 500) in world "world"
+            set {_matchnum} to {games::manager::%{_game}%::%{_word}%::label}
+            set {_init} to 500
+            set {_by} to 200
+            set {_multiplier} to {_matchnum} - 1
+            set {_finalz} to {_by} * {_multiplier}
+            add {_init} to {_finalz}
+            teleport {_p} to the location (500, 201, {_finalz}) in world "world"
+            pingQueue("skywars", {_matchnum})
+
+function pingQueue(game: text, match: number):
+    if size of {games::manager::%{_game}%::match%{_match}%::queued::*} >= {games::manager::%{_game}%::match%{_match}%::maxqueue}:
+        if {games::manager::%{_game}%::match%{_match}%::state} < 3:
+            startGame({_game}, {_match})
+
+
+function startGame(game: text, match: number):
+    set {games::manager::%{_game}%::%{_match}}
+    set {_lex} to 459
+    set {_ley} to 0
+    set {_lez} to 452
+    set {_epicgames} to {_match} - 1
+    set {_epicgames} to {_epicgames} * 200
+    add {_epicgames} to {_lez}
+    console command "/setblock %{_lex}% %{_ley}% %{_lez}% structure_block 0 0 {metadata:"""",mirror:""NONE"",ignoreEntities:0b,powered:0b,seed:0L,author:"""",rotation:""NONE"",posX:0,mode:""LOAD"",posY:0,sizeX:32,posZ:1,integrity:1.0f,showair:0b,x:459,name:""1sky1"",y:0,z:452,id:""minecraft:structure_block"",sizeY:32,sizeZ:32,showboundingbox:1b}"
+    console command "/setblock %{_lex}% %({_ley} - 1)% %{_lez}% redstone_block 0 0"
+    wait 2 ticks
+    console command "/fill %{_lex}% %{_ley}% %{_lez}% %{_lex}% %({_ley} - 1)% %{_lez}% air"
+    wait 3 seconds
+
 
 function addToQueue(p: player, game: text, match: text):
     add {_p} to {games::manager::%{_game}%::%{_match}%::queued::*}
