@@ -147,6 +147,25 @@ command /rank [<offlineplayer>] [<text>]:
                         set {rank::%arg 1's uuid%} to arg 2
                         send "&7You have updated &b%arg 1%'s &7rank to %{rank.%arg 2%}%"
 
+command /tp [<player>] [<player>]:
+    trigger:
+        if arg 1 is set:
+            if arg 2 is set:
+                if player has permission "staff.tphere":
+                    teleport arg-1 to arg-2
+                    message "&8&l[&c&lSinister &4&lNetwork&8&l] &e&lTeleporting &a&l%arg-1% &e&lto &a&l%arg-2%"
+                else:
+                    if player has permission "staff.tphere":
+                        teleport player to arg-1
+                        message "&8&l[&c&lSinister &4&lNetwork&8&l] &e&lTeleporting &a&l%arg-1% &e&lto &a&l%arg-2%"
+                    if player doesn't have permission "staff.tphere":
+                        message "&cYou don't have access to that command"
+                    else:
+                        if player has permission "staff.tphere":
+                            message "&8&l[&c&lSinister &4&lNetwork&8&l] &cUsage: /tp [player] &e&lOR &c/tp [x] [y] [z]"
+                        if player doesn't have permission "staff.tphere":
+                            message "&cYou don't have access to that command"
+
 command /gmc [<offlineplayer>] [<text>]:
     permission: staff.gmc
     permission message: &cYou don't have access to that command
