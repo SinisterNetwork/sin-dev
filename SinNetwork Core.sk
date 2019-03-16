@@ -242,6 +242,12 @@ command /gingey:
         loop 20 times:
             broadcast "&6&lGingey sucks.... he should just give up"
 
+command /forest:
+    permission: op
+    trigger:
+        loop 20 times:
+            broadcast "&a&lForestHunters is to be pro--demoted. kthx"
+
 # Useful Commands
 # Version 1.1
 
