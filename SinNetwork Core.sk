@@ -147,7 +147,7 @@ command /rank [<offlineplayer>] [<text>]:
                         set {rank::%arg 1's uuid%} to arg 2
                         send "&7You have updated &b%arg 1%'s &7rank to %{rank.%arg 2%}%"
 
-command /tphere [<player>] [<player>]:
+command /tp [<player>] [<player>]:
     trigger:
         if arg 1 is set:
             if arg 2 is set:
@@ -161,10 +161,14 @@ command /tphere [<player>] [<player>]:
                     if player doesn't have permission "staff.tphere":
                         message "&cYou don't have access to that command"
             else:
-                if player has permission "staff.tphere":
-                    message "&8&l[&c&lSinister &4&lNetwork&8&l] &cUsage: /tp [player] &e&lOR &c/tp [x] [y] [z]"
-                if player doesn't have permission "staff.tphere":
-                    message "&cYou don't have access to that command"
+                set {_fail} to true
+        else:
+            set {_fail} to true
+        if {_fail} is true:
+            if player has permission "staff.tphere":
+                message "&8&l[&c&lSinister &4&lNetwork&8&l] &cUsage: /tp [player] [player]"
+            if player doesn't have permission "staff.tphere":
+                message "&cYou don't have access to that command"
 
 command /gmc [<offlineplayer>] [<text>]:
     permission: staff.gmc
@@ -221,6 +225,22 @@ command /gmsp [<offlineplayer>] [<text>]:
             else if arg 1 is online:
                 set arg 1's gamemode to spectator
                 send "&7%arg 1%'s mode has been updated to &bSpectator&7."
+
+
+# Useless Commands
+# Version 1.0
+
+command /racism:
+    permission: op
+    trigger:
+        loop 20 times:
+            broadcast "&4&lracism has activated"
+
+command /gingey:
+    permission: op
+    trigger:
+        loop 20 times:
+            broadcast "&6&lGingey sucks.... he should just give up"
 
 # Useful Commands
 # Version 1.1
