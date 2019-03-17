@@ -1,0 +1,95 @@
+options:
+    prefix: &8[&c&lSinister &4&lNetwork&8]
+
+command /swkit [<number>]:
+	trigger:
+		if arg 1 is not set:
+			open chest with 3 rows named "                 &c&lKits" to player
+			format slot 0 of player with gray stained glass pane named " " to be unstealable
+			format slot 1 of player with gray stained glass pane named " " to be unstealable
+			format slot 2 of player with gray stained glass pane named " " to be unstealable
+			format slot 3 of player with gray stained glass pane named " " to be unstealable
+			format slot 4 of player with gray stained glass pane named " " to be unstealable
+			format slot 5 of player with gray stained glass pane named " " to be unstealable
+			format slot 6 of player with gray stained glass pane named " " to be unstealable
+			format slot 7 of player with gray stained glass pane named " " to be unstealable
+			format slot 8 of player with gray stained glass pane named " " to be unstealable
+			format slot 9 of player with gray stained glass pane named " " to be unstealable
+			format slot 10 of player with glowing gold helmet of unbreaking 10 named "&f&lStarter Kit" to close then run [execute player command "/swkit 1"]
+			format slot 11 of player with gray stained glass pane named " " to be unstealable
+			format slot 14 of player with glowing barrier of unbreaking 10 named "&f&lArcher Kit &8(&cTEMPORARILY DISABLED&8)" to close then run [execute player command "/swkit 4"]
+			format slot 13 of player with gray stained glass pane named " " to be unstealable
+			format slot 16 of player with glowing barrier of unbreaking 10 named "&f&lMiner Kit &8(&cTEMPORARILY DISABLED&8)" to close then run [execute player command "/swkit 3"]
+			format slot 15 of player with gray stained glass pane named " " to be unstealable
+			format slot 12 of player with glowing barrier of unbreaking 10 named "&f&lBuilder Kit &8(&cTEMPORARILY DISABLED&8)" to close then run [execute player command "/swkit 2"]
+			format slot 17 of player with gray stained glass pane named " " to be unstealable
+			format slot 18 of player with gray stained glass pane named " " to be unstealable
+			format slot 19 of player with gray stained glass pane named " " to be unstealable
+			format slot 20 of player with gray stained glass pane named " " to be unstealable
+			format slot 21 of player with gray stained glass pane named " " to be unstealable
+			format slot 22 of player with gray stained glass pane named " " to be unstealable
+			format slot 23 of player with gray stained glass pane named " " to be unstealable
+			format slot 24 of player with gray stained glass pane named " " to be unstealable
+			format slot 25 of player with gray stained glass pane named " " to be unstealable
+			format slot 26 of player with gray stained glass pane named " " to be unstealable
+		if arg 1 is 1:
+			clear the inventory of the player
+			equip player with golden boots
+			equip player with golden chestplate
+			equip player with golden leggings
+			equip player with golden helmet
+			give player stone sword
+			loop 15 times:
+				give player steak
+			loop 2 times:
+				give player ender pearl
+		if arg 1 is 4:
+			if player has permission "swkit.archer":
+				send "{@prefix} &cArcher Kit is temporarily disabled."
+			else:
+				send "{@prefix} &cYou have not unlocked this kit!"
+		if arg 1 is 3:
+			if player has permission "swkit.miner":
+				send "{@prefix} &cMiner Kit is temporarily disabled."
+			else:
+				send "{@prefix} &cYou have not unlocked this kit!"
+		if arg 1 is 2:
+			if player has permission "swkit.builder":
+				send "{@prefix} &cBuilder Kit is temporarily disabled."
+			else:
+				send "{@prefix} &cYou have not unlocked this kit!"
+		if arg 1 is 10:
+			if player has permission "kit.admin":
+				clear the inventory of the player
+				equip player with diamond boots of protection 350 with name "&cADMIN BOOTS"
+				equip player with diamond chestplate of thorns 500 with name "&cADMIN CHESTPLATE"
+				equip player with diamond leggings of protection 350  with name "&cADMIN LEGGINGS"
+				equip player with diamond helmet of protection 350  with name "&cADMIN HELMET"
+				give player diamond sword of sharpness 100 with name "&cADMIN SWORD"
+				loop 15 times:
+					give player steak with name "&6GINGER STEAK"
+				loop 6 times:
+					give player golden apple with name "&dGolden Apple"
+				loop 16 times:
+					give player ender pearl
+				send "&7&6GINGER KIT has been selected"
+			else:
+				send "{@prefix} &cYou have not unlocked this kit!"
+		if arg 1 is 12:
+			if player has permission "kit.nick":
+				clear the inventory of the player
+				equip player with diamond boots of protection 350 with name "&4NICK's BOOTS"
+				equip player with diamond chestplate of thorns 500 with name "&4NICK's CHESTPLATE"
+				equip player with diamond leggings of protection 350  with name "&4NICK's LEGGINGS"
+				equip player with diamond helmet of protection 350 with name "&4NICK's HELMET"
+				give player stick of sharpness 5, knockback 10, fire aspect 5, unbreaking 1000, with name "&4NICK's SWORD"
+				give player slimeball of knockback 10 with name "&dKnockback 10 Slime"
+				loop 15 times:
+					give player steak with name "&4NICK's STEAK"
+				loop 6 times:
+					give player enchanted golden apple with name "&4NICK's Apple"
+				loop 16 times:
+					give player ender pearl with name "&4NICK's Pearl"
+				send "&7&4NICK's KIT has been selected"
+			else:
+				send "{@prefix} &cYou have not unlocked this kit!"
