@@ -273,12 +273,12 @@ command /fly:
 # I need to enable it to work on other players
 command /heal:
     trigger:
-        heal the players
+        heal the player
         send "&aYou've been healed."
 
 command /feed:
     trigger:
-        feed the players
+        feed the player
         send "&aYou've been feed."
 
 #
@@ -318,6 +318,10 @@ command /discord:
 command /forums:
     trigger:
         send "&cClick <link:https://sinnetwork.forums.gg/>&ehere<reset> &cfor the forums"
+
+command /apply:
+    trigger:
+        send "&cClick <link:http://bit.ly/staffjr/>&4here<reset> &cto apply!"
 
 command /donorchat [<text>]:
     aliases: /dc
@@ -391,3 +395,8 @@ command /staffchat [<text>]:
 function sendToStaff(msg: text, p: player):
     set {_epic} to uuid of {_p}
     send "&d[STAFF] %{rank.%{rank::%{_epic}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff.chat"]
+
+# Auto broadcast
+
+every 120 seconds:
+    broadcast "{@prefix} &6Interested in applying for staff? Do &4/forums &6to get started"
