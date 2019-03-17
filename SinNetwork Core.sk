@@ -18,7 +18,6 @@ on load:
  set {rank.owner} to "&3[OWNER] &3"
  set {rank.vip} to "&2[VIP] &2"
  set {rank.mvp} to "&b[MVP] &b"
- set {rank.jrdev} to "&c[JR.DEV]"
 
 every second:
     loop all players:
