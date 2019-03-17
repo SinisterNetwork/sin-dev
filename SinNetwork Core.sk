@@ -230,8 +230,8 @@ command /gmsp [<offlineplayer>] [<text>]:
                 send "&7%arg 1%'s mode has been updated to &bSpectator&7."
 
 
-# Useless Commands
-# Version 1.0
+                # Useless Commands
+                # Version 1.0
 
 command /racism:
     aliases: /tqnk
@@ -252,8 +252,14 @@ command /forest:
         loop 20 times:
             broadcast "&a&lForestHunters is to be pro--demoted. kthx"
 
-# Useful Commands
-# Version 1.1
+command /abcs:
+    permission: op
+    trigger:
+        loop 20 times:
+            broadcast "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+
+            # Useful Commands
+            # Version 1.1
 
 command /fly:
     permission: staff.fly
@@ -340,8 +346,8 @@ function sendToDonor(msg: text, p: player):
     send "&6[DONOR] %{rank.%{rank::%{_fun}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff.chat"]
 
 
-# Staff Commands
-# Version 1.0
+    # Staff Commands
+    # Version 1.0
 
 command /vanish [<text>]:
     aliases: /v
@@ -399,12 +405,18 @@ function sendToStaff(msg: text, p: player):
     set {_epic} to uuid of {_p}
     send "&d[STAFF] %{rank.%{rank::%{_epic}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff.chat"]
 
-# Auto broadcast
+    # Auto broadcast
+
+on load:
+    add "{@prefix} &6Want to apply for staff? Do &c/apply &6to apply!" to {tqnk::*}
+    add "{@prefix} &6Interact with the comunity on the forums, do &c/forums" to {tqnk::*}
+    add "{@prefix} &6Stay up to date with Sinister Network, join the discord, do &C/discord" to {tqnk::*}
 
 every 600 seconds:
-    broadcast "{@prefix} &Want to apply for staff? Do &4/apply &6to get started"
+    set {_autobroad} to a random element out of {tqnk::*}
+    broadcast "%{_autobroad}%"
 
-# Debug Commands (Force Run Things such as auto broadcast)
+    # Debug Commands (Force Run Things such as auto broadcast)
 
 command /autobc:
     aliases: /abc
