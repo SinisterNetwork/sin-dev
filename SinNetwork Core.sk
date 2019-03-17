@@ -276,8 +276,39 @@ command /fly:
             set {fly.%player%} to false
             set player's flight mode to false
 
+command /help:
+    trigger:
+        send "&8----{@prefix}&8----"
+        if player has permission "op":
+            send "&c/forest - Spams chat with ForestHunters pro... demotion."
+            send "&c/gingey - Spams the chat with _Gingey_'s Skript Stress."
+            send "&C/racism - Spams chat with racism activation."
+            send "&c/abcs - Spams chat with the ABCs."
+            send "&c/rank <user> - Sets a rank for a user."
+            send "&c/tag <user> - Sets a tag for a user."
+            send "&c/autobc1 - Forcefully sends the first auto broadcast."
+            send "&c/autobc2 - Forcefully sends the second auto broadcast."
+            send "&c/autobc3 - Forcefully sends the third auto broadcast."
+            send "&c/broadcast <message> - Sends a message to the whole server."
+        if player has permission "staff":
+            send "&3/help - Displays this Menu."
+            send "&3/forums - Messages you our Forums Page."
+            send "&3/discord - Messages you our Official Discord Server."
+            send "&3/apply - Messages you the link to apply for staff."
+            send "&8Do /help 2 to see staff commands"
+        if player has permission "donor":
+            send "&3/donorchat <message> - Chat in the donor's only chat!"
+        else:
+            send "&3/help - Displays this Menu."
+            send "&3/forums - Messages you our Forums Page."
+            send "&3/discord - Messages you our Official Discord Server."
+            send "&3/apply - Messages you the link to apply for staff."
+
+
+
 # The following will only work on self
 # I need to enable it to work on other players
+
 command /heal:
     permission: staff.heal
     trigger:
@@ -418,8 +449,20 @@ every 600 seconds:
 
     # Debug Commands (Force Run Things such as auto broadcast)
 
-command /autobc:
-    aliases: /abc
+command /autobc1:
+    aliases: /abc1
     permission: op
     trigger:
-        broadcast "{@prefix} &6Want to apply for staff? Do &4/apply &6to get started"
+        broadcast "{@prefix} &6Want to apply for staff? Do &c/apply &6to apply!"
+
+command /autobc2:
+    aliases: /abc2
+    permission: op
+    trigger:
+        broadcast "{@prefix} &6Interact with the comunity on the forums, do &c/forums"
+
+command /autobc3:
+    aliases: /abc3
+    permission: op
+    trigger:
+        broadcast "{@prefix} &6Stay up to date with Sinister Network, join the discord, do &C/discord"
