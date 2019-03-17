@@ -96,6 +96,7 @@ every 2 seconds:
 
 
 command /tag [<offlineplayer>] [<text>]:
+    aliases: /settag
     permission: admin
     trigger:
         if arg 1 and arg 2 is not set:
@@ -128,6 +129,7 @@ command /tags [<text>]:
             add 1 to {_num}
 
 command /rank [<offlineplayer>] [<text>]:
+    aliases: /setrank
     permission: admin
     permission message: &cYou don't have access to that command.
     trigger:
@@ -231,6 +233,7 @@ command /gmsp [<offlineplayer>] [<text>]:
 # Version 1.0
 
 command /racism:
+    aliases: /tqnk
     permission: op
     trigger:
         loop 20 times:
@@ -282,6 +285,7 @@ command /feed:
 #
 
 command /nick [<text>]:
+    aliases: /setnick
     permission: donor.nick
     permission message: &cYou need to be at least &b[MVP] rank to use this command.
     trigger:
@@ -333,6 +337,7 @@ function sendToDonor(msg: text, p: player):
 # Version 1.0
 
 command /vanish [<text>]:
+    aliases: /v
     permission: mod
     permission message: &cYou don't have access to that command.
     trigger:
@@ -347,7 +352,8 @@ command /vanish [<text>]:
                 loop-player has permission "mod"
                 send "&b%player% &7has left Vanish." to loop-player
 
-command /bc [<text>]:
+command /broadcast [<text>]:
+    aliases: /bc
     permission: admin
     permission message: &cYou don't have access to that command
     trigger:
@@ -358,7 +364,7 @@ command /bc [<text>]:
 
 command /chatclear:
     permission: staff.cc
-    aliases: /cc
+    aliases: /cc , /clearchat
     trigger:
         loop 100 times:
             broadcast ""
