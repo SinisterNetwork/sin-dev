@@ -65,6 +65,9 @@ function initGames(game: text, count: number, minqueue: number, maxqueue: number
             set {_itemp} to diamond named "&6Skywars!"
             set line 1 of {_itemp}'s lore to "&7Engage in &acompetitive battle!"
             set {games::manager::skywars::item} to {_itemp}
+        if {_game} is "murder":
+            set {_itemp} to iron sword named "&6Murder Mystery!"
+            set line 1 of {_itemp}'s lore to "&cComing Soon!"
 
 function initMatches(game: text, count: number, minqueue: number, maxqueue: number):
     set {_start} to 1
@@ -82,6 +85,7 @@ function translateShortToLong(game: text) :: text:
         return "Skywars"
 
 command /menu:
+    aliases: /queue , /mm , /m
     trigger:
         openQueueMenu(player)
 
