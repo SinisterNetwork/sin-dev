@@ -1,0 +1,351 @@
+	# Punishments
+	# Version 1.0
+	# Created by ThatOneTqnk
+
+options:
+	perm: &cInsufficient permissions
+	server: &8[&cSinister &4Network&8]
+
+on connect:
+	if {tempban::%player's uuid%::ban} is true:
+		set {_diff} to difference between now and {tempban::%player's uuid%::stamp}
+		set {_remain} to difference between {tempban::%player's uuid%::span} and {_diff}
+		if {_diff} < {tempban::%player's uuid%::span}:
+			kick the player due to "%{tempban::%player's uuid%::msg}% &8| &7Punishment expires in %{_remain}%"
+		else:
+			set {tempban::%player's uuid%::ban} to false
+			set {tempban::%player's uuid%::msg} to ""
+			set {tempban::%player's uuid%::span} to 0 seconds
+			set {tempban::%player's uuid%::stamp} to 0 seconds
+
+on chat:
+	if {mute::%player's uuid%::mute} is true:
+		if {mute::%player's uuid%::span} is greater than 0 seconds:
+			set {_diff} to difference between now and {mute::%player's uuid%::stamp}
+			if {_diff} >= {mute::%player's uuid%::span}:
+				set {mute::%player's uuid%::span} to 0 seconds
+				set {mute::%player's uuid%::mute} to false
+				set {mute::%player's uuid%::stamp} to 0 seconds
+			else:
+				set {_attach} to ""
+				if {mute::%player's uuid%::msg} is not false:
+					set {_attach} to " &7for &e%{mute::%player's uuid%::msg}%"
+				set {_wait} to difference between {mute::%player's uuid%::span} and {_diff}
+				send ""
+				send "&7You are &cmuted%{_attach}%"
+				send "&7You may speak in &e%{_wait}%"
+				send ""
+				cancel event
+				stop
+		else:
+			if {mute::%player's uuid%::msg} is false:
+				send "&7You are &cmuted! &7You cannot speak."
+				cancel event
+			else:
+				send "&7You are &cmuted &7for &e%{mute::%player's uuid%::msg}%"
+				cancel event
+			stop
+
+
+command /warn [<offline player>] [<text>]:
+	permission: staff.warn
+	trigger:
+		if arg-1 is not set:
+			set {_dab} to true
+		if arg-2 is not set:
+			set {_dab} to true
+		if {_dab} is true:
+			send "&c/warn (player) (reason)"
+			stop
+		if arg-1 is online:
+			broadcast "&b%player% &7warned &b%arg-1% &7for &c%colored arg-2%"
+		else:
+			send "&cPlayer is offline."
+
+command /revertwarn [<offline player>]:
+	permission: staff.warn
+	trigger:
+		if arg-1 is not set:
+			set {_dab} to true
+		if {_dab} is true:
+			send "&c/revertwarn (player)"
+			stop
+		if arg-1 is online:
+			broadcast "&b%player% &7reverted the warn for &b%arg-1%"
+		else:
+			send "&cPlayer is offline."
+
+command /kick [<offline player>] [<text>]:
+	permission message: {@perm}
+	permission: staff.kick
+	trigger:
+		if arg-1 is not set:
+			send "&c/kick <player> [reason]"
+			stop
+		if arg-1 is online:
+			if arg-2 is set:
+				kick arg-1 because colored arg-2
+				broadcast "&b%player% &7kicked &b%arg-1% &7for %colored arg-2%"
+			else:
+				kick arg-1
+				broadcast "&b%player% &7kicked &b%arg-1%"
+		else:
+			send "&cPlayer is offline."
+
+command /ban [<offline player>] [<text>]:
+	permission: staff.ban
+	permission message: {@perm}
+	trigger:
+		set {_failure} to false
+		if arg-1 is not set:
+			set {_failure} to true
+		if arg-2 is not set:
+			set {_failure} to true
+		if {_failure} is true:
+			send "&c/ban <player> <timespan> [reason]"
+			stop
+		set {_lmao::*} to split arg-2 using the delimiter " "
+		set {_span} to {_lmao::1}
+		set {_len} to length of {_span}
+		set {_lenwhole} to length of arg-2
+		set {_lendiff} to {_lenwhole} - {_len}
+		if size of {_lmao::*} is 1:
+			set {_reason} to "&cBanned by an operator."
+		else:
+			set {_reason} to last ({_lendiff} - 1) characters of arg-2
+		if {_span} is "forever":
+			set {tempban::%arg-1's uuid%::ban} to false
+			set {tempban::%arg-1's uuid%::span} to 0 seconds
+			set {tempban::%arg-1's uuid%::stamp} to 0 seconds
+			ban arg-1 because "&c&lPerm Ban &8|&r &a{@server} &8- &7%colored {_reason}%"
+			kick arg 1 due to "&c&lPerm Ban &8|&r &a{@server} &8- &7%colored {_reason}%"
+			broadcast "&b%player% &7banned &b%arg-1% &7for &c%{_reason}% &7[FOREVER]"
+		else:
+			set {_tryParse::*} to timeParser({_span})
+			set {_res} to {_tryParse::1}
+			if {_res} is "error":
+				send "&cInvalid timespan!"
+				send "&6Example: &e2y3mo1w4d5h2m29s"
+			else:
+				set {_timespan} to "%{_res}% seconds" parsed as timespan
+				unban arg-1
+				set {tempban::%arg-1's uuid%::ban} to true
+				set {tempban::%arg-1's uuid%::span} to {_timespan}
+				set {tempban::%arg-1's uuid%::stamp} to now
+				set {tempban::%arg-1's uuid%::msg} to "&c&lTempban&r &8| &a{@server} &8- &7%colored {_reason}%"
+				kick arg 1 due to "&c&lTempban&r &8| &a{@server}&r &8- &7%colored {_reason}% &8| &7Expires in &e%{_timespan}%"
+				broadcast "&b%player% &7banned &b%arg-1% &7for &c%{_reason}% &7[&e%{_timespan}%&7]"
+
+
+command /mute [<offline player>] [<text>]:
+	permission: staff.mute
+	permission message: {@perm}
+	trigger:
+		if arg-1 is set:
+			if arg-1 is online:
+				set {_minspan} to 1 second
+				set {_zerospan} to 0 seconds
+				set {_uuid} to uuid of arg-1
+				if arg-2 is set:
+					set {_lmao::*} to split arg-2 using the delimiter " "
+					set {_span} to {_lmao::1}
+					set {_len} to length of {_span}
+					set {_lenwhole} to length of arg-2
+					set {_lendiff} to {_lenwhole} - {_len}
+					if size of {_lmao::*} > 1:
+						set {_reason} to last ({_lendiff} - 1) characters of arg-2
+						set {_decolor} to {_reason}
+						set {_reason} to colored {_reason}
+				else:
+					set {_span} to "forever"
+				if {_span} is not "forever":
+					set {_tryParse::*} to timeParser({_span})
+					set {_res} to {_tryParse::1}
+					if {_res} is "error":
+						send "&cInvalid timespan!"
+						send "&6Example: &e2y3mo1w4d5h2m29s"
+						stop
+					set {_span} to {_res}
+					set {_span} to "%{_span}% seconds" parsed as timespan
+					if {_span} >= {_minspan}:
+						set {mute::%{_uuid}%::span} to {_span}
+						set {mute::%{_uuid}%::mute} to true
+						set {mute::%{_uuid}%::stamp} to now
+						if {_reason} is set:
+							set {mute::%{_uuid}%::msg} to {_reason}
+							send "&7You have been &cmuted &7for &e%{_reason}% &7[&e%{_span}%&7]" to arg-1
+							broadcast "&b%player% &7muted &b%arg-1% &7for &c%{_reason}% &7[&e%{_span}%&7]"
+						else:
+							set {mute::%{_uuid}%::msg} to false
+							send "&7You have been &cmuted. &7[&e%{_span}%&7]" to arg-1
+							broadcast "&b%player% &7muted &b%arg-1% &7[&e%{_span}%&7]"
+					else:
+						if {_span} = {_zerospan}:
+							make player execute "/unmute %arg-1%"
+						else:
+							send "&cYour mute span should be at least 1 second."
+				else:
+					if {_reason} is set:
+						if {mute::%{_uuid}%::mute} is not set:
+							set {mute::%{_uuid}%::mute} to false
+						send "&7Muted &e%arg-1% &7for &e%{_decolor}% &7[FOREVER]"
+						set {mute::%{_uuid}%::span} to {_zerospan}
+						set {mute::%{_uuid}%::mute} to true
+						set {mute::%{_uuid}%::stamp} to now
+						set {mute::%{_uuid}%::msg} to {_reason}
+						broadcast "&b%player% &7muted &b%arg-1% &7for &e%{_reason}% &7[&7FOREVER&7]"
+						send "&7You have been &cmuted &7for &e%{_reason}%" to arg-1
+					else:
+						if {mute::%{_uuid}%::mute} is not set:
+							set {mute::%{_uuid}%::mute} to false
+						if {mute::%{_uuid}%::mute} is false:
+							send "&7Muted &e%arg-1% &7forever."
+							set {mute::%{_uuid}%::span} to {_zerospan}
+							set {mute::%{_uuid}%::mute} to true
+							set {mute::%{_uuid}%::stamp} to now
+							set {mute::%{_uuid}%::msg} to false
+							broadcast "&b%player% &7muted &b%arg-1% &7[&7FOREVER&7]"
+							send "&7You have been &cmuted." to arg-1
+						else:
+							make player execute "/unmute %arg-1%"
+			else:
+				send "&cPlayer is not online."
+		else:
+			send "&c/mute (player) [timespan] [reason]"
+
+command /unmute [<offline player>]:
+	permission: staff.unmute
+	permission message: {@perm}
+	trigger:
+		if arg-1 is set:
+			if arg-1 is online:
+				set {_uuid} to uuid of arg-1
+				if {mute::%{_uuid}%::mute} is not set:
+					set {mute::%{_uuid}%::mute} to false
+				if {mute::%{_uuid}%::mute} is false:
+					send "&e%arg-1% &7is not &6muted."
+					stop
+				set {mute::%{_uuid}%::mute} to false
+				set {mute::%{_uuid}%::span} to 0 seconds
+				send "&7Unmuted &e%arg-1%."
+				broadcast "&b%player% &7unmuted &b%arg-1%"
+			else:
+				send "&cPlayer is not online."
+		else:
+			send "&c/unmute (player)"
+
+command /unban [<offline player>]:
+	permission: staff.unban
+	permission message: {@perm}
+	trigger:
+		set {_failure} to false
+		if arg-1 is not set:
+			message "&c/unban <player>"
+			stop
+		unban arg-1
+		set {tempban::%arg-1's uuid%::ban} to false
+		set {tempban::%arg-1's uuid%::span} to 0 seconds
+		set {tempban::%arg-1's uuid%::stamp} to 0 seconds
+		broadcast "&b%player% &cunbanned &b%arg-1%"
+
+
+
+# Punish
+
+function timeParser(p: text) :: objects:
+	set {_invalid} to false
+	add "y" to {_validdate::*}
+	add "mo" to {_validdate::*}
+	add "w" to {_validdate::*}
+	add "d" to {_validdate::*}
+	add "h" to {_validdate::*}
+	add "s" to {_validdate::*}
+	add "m" to {_validdate::*}
+
+	set {_secres} to 0
+	set {_help} to 0
+	set {_terminate} to length of {_p}
+	set {_totalnum} to 0
+	set {_numlock} to 0
+	while {_help} < {_terminate}:
+		set {_char} to the first character of {_p}
+		set {_yeet} to false
+		if {_char} is "0":
+			set {_yeet} to true
+		if {_char} is "1":
+			set {_yeet} to true
+		if {_char} is "2":
+			set {_yeet} to true
+		if {_char} is "3":
+			set {_yeet} to true
+		if {_char} is "4":
+			set {_yeet} to true
+		if {_char} is "5":
+			set {_yeet} to true
+		if {_char} is "6":
+			set {_yeet} to true
+		if {_char} is "7":
+			set {_yeet} to true
+		if {_char} is "8":
+			set {_yeet} to true
+		if {_char} is "9":
+			set {_yeet} to true
+		if {_yeet} is true:
+			if {_numlock} is 2:
+				if {_validdate::*} does not contain {_ahh}:
+					set {_invalid} to true
+				else:
+					set {_tempres} to parseShortTime({_totalnum}, {_ahh})
+					add {_tempres} to {_secres}
+				set {_ahh} to ""
+				set {_totalnum} to 0
+			set {_numlock} to 1
+			set {_what} to {_char} parsed as number
+			set {_totalnum} to {_totalnum} * 10
+			add {_what} to {_totalnum}
+		else:
+			set {_ahh} to join {_ahh} and {_char}
+			if {_numlock} is 1:
+				set {_numlock} to 2
+		set {_p} to last (length of {_p} - 1) characters of {_p}
+		add 1 to {_help}
+	if {_validdate::*} does not contain {_ahh}:
+		set {_invalid} to true
+	else:
+		set {_tempres} to parseShortTime({_totalnum}, {_ahh})
+		add {_tempres} to {_secres}
+	if {_invalid} is true:
+		add "error" to {_package::*}
+		return {_package::*}
+	else:
+		# broadcast "%{_secres}% seconds."
+		# set {_timespan} to "%{_secres}% seconds" parsed as timespan
+		# broadcast "%{_timespan}%"
+		add {_secres} to {_package::*}
+		return {_package::*}
+
+function parseShortTime(n: number, s: text) :: number:
+	add "y" to {_validdate::*}
+	add "mo" to {_validdate::*}
+	add "w" to {_validdate::*}
+	add "d" to {_validdate::*}
+	add "h" to {_validdate::*}
+	add "s" to {_validdate::*}
+	add "m" to {_validdate::*}
+
+	set {_zero} to 0
+	if {_validdate::*} does not contain {_s}:
+		return {_zero}
+	if {_s} is "m":
+		set {_n} to {_n} * 60
+	if {_s} is "h":
+		set {_n} to {_n} * 3600
+	if {_s} is "d":
+		set {_n} to {_n} * 86400
+	if {_s} is "w":
+		set {_n} to {_n} * 604800
+	if {_s} is "mo":
+		set {_n} to {_n} * 2592000
+	if {_s} is "y":
+		set {_n} to {_n} * 31557600
+	return {_n}
