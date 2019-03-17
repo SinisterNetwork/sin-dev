@@ -1,5 +1,5 @@
-# Main Menu
-# Version 1.0
+    # Main Menu
+    # Version 1.0
 
 on load:
     resetGameCore()
@@ -20,9 +20,9 @@ function resetPlayerData(p: player):
     if {leplayer::%{_uuid}%::nick} is not set:
         set {leplayer::%{_uuid}%::nick} to false
 
-# ######
-# Util #
-# ######
+        # ######
+        # Util #
+        # ######
 
 function singleSound(sound: text, p: player, pitch: number, volume: number):
     play sound "%{_sound}%" with volume {_volume} with pitch {_pitch} at location of {_p} for {_p}
@@ -50,7 +50,7 @@ function clearTitleToList(players: objects):
         console command "/execute @e[type=armor_stand,name=anchor] ~ ~ ~ title %loop-value% clear"
 
 
-# #######
+        # #######
 function resetGameCore():
     delete {games::*}
     set {games::manager} to true
