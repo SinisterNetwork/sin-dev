@@ -321,7 +321,7 @@ command /forums:
 
 command /apply:
     trigger:
-        send "&cClick <link:http://bit.ly/staffjr/>&4here<reset> &cto apply!"
+        send "&cClick <link:http://bit.ly/SinisterNetworkApplication>&4here<reset> &cto apply!"
 
 command /donorchat [<text>]:
     aliases: /dc
@@ -398,5 +398,5 @@ function sendToStaff(msg: text, p: player):
 
 # Auto broadcast
 
-every 120 seconds:
-    broadcast "{@prefix} &6Interested in applying for staff? Do &4/forums &6to get started"
+every 600 seconds:
+    broadcast "{@prefix} &6Interested in applying for staff? Do &4/apply &6to get started"
