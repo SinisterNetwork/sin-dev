@@ -1,5 +1,5 @@
 options:
-    prefix: &8[&c&lSinister &4&lNetwork&8]
+	prefix: &8[&c&lSinister &4&lNetwork&8]
 
 command /swkit [<number>]:
 	trigger:
@@ -17,11 +17,11 @@ command /swkit [<number>]:
 			format slot 9 of player with gray stained glass pane named " " to be unstealable
 			format slot 10 of player with glowing gold helmet of unbreaking 10 named "&f&lStarter Kit" to close then run [execute player command "/swkit 1"]
 			format slot 11 of player with gray stained glass pane named " " to be unstealable
-			format slot 14 of player with glowing barrier of unbreaking 10 named "&f&lArcher Kit &8(&cTEMPORARILY DISABLED&8)" to close then run [execute player command "/swkit 4"]
+			format slot 14 of player with glowing bow of unbreaking 10 named "&f&lArcher Kit" to close then run [execute player command "/swkit 4"]
 			format slot 13 of player with gray stained glass pane named " " to be unstealable
-			format slot 16 of player with glowing barrier of unbreaking 10 named "&f&lMiner Kit &8(&cTEMPORARILY DISABLED&8)" to close then run [execute player command "/swkit 3"]
+			format slot 16 of player with glowing iron pickaxe of unbreaking 10 named "&f&lMiner Kit" to close then run [execute player command "/swkit 3"]
 			format slot 15 of player with gray stained glass pane named " " to be unstealable
-			format slot 12 of player with glowing barrier of unbreaking 10 named "&f&lBuilder Kit &8(&cTEMPORARILY DISABLED&8)" to close then run [execute player command "/swkit 2"]
+			format slot 12 of player with glowing brick block of unbreaking 10 named "&f&lBuilder Kit" to close then run [execute player command "/swkit 2"]
 			format slot 17 of player with gray stained glass pane named " " to be unstealable
 			format slot 18 of player with gray stained glass pane named " " to be unstealable
 			format slot 19 of player with gray stained glass pane named " " to be unstealable
@@ -38,24 +38,50 @@ command /swkit [<number>]:
 			equip player with golden chestplate
 			equip player with golden leggings
 			equip player with golden helmet
-			give player stone sword
+			give player stone sword of sharpness 1
 			loop 15 times:
 				give player steak
 			loop 2 times:
 				give player ender pearl
 		if arg 1 is 4:
 			if player has permission "swkit.archer":
-				send "{@prefix} &cArcher Kit is temporarily disabled."
+				clear the inventory of the player
+				equip player with leather boots
+				equip player with chain chestplate
+				equip player with chain leggings
+				equip player with leather helmet
+				give player bow of power 1
+				give player ender pearl
+				give player wooden sword of sharpness 1
+				give player 15 steak
+				give player 128 arrow
 			else:
 				send "{@prefix} &cYou have not unlocked this kit!"
 		if arg 1 is 3:
 			if player has permission "swkit.miner":
-				send "{@prefix} &cMiner Kit is temporarily disabled."
+				clear the inventory of the player
+				equip the player with iron boots
+				equip the player with chain chestplate
+				equip the player with chain leggings
+				equip the player with iron helmet
+				give player iron pickaxe of efficiency 1
+				give player stone sword
+				give player 128 cobble_stone
+				give player 15 steak
 			else:
 				send "{@prefix} &cYou have not unlocked this kit!"
 		if arg 1 is 2:
 			if player has permission "swkit.builder":
-				send "{@prefix} &cBuilder Kit is temporarily disabled."
+				clear the inventory of the player
+				equip the player with iron boots of feather falling 1
+				equip the player with chain chestplate
+				equip the player with chain leggings
+				equip the player with gold helmet of unbreaking 1
+				give player stone sword
+				give player 64 oak_wood_planks
+				give player 64 cobble_stone
+				give player 64 brick_block
+				give player 15 steak
 			else:
 				send "{@prefix} &cYou have not unlocked this kit!"
 		if arg 1 is 10:
