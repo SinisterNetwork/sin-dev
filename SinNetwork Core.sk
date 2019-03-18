@@ -1,6 +1,6 @@
 options:
-    prefix: &8[&c&lSinister &4&lNetwork&8]
-    ScoreboardName: &c&lSinister &4&lNetwork
+	prefix: &8[&c&lSinister &4&lNetwork&8]
+	ScoreboardName: &c&lSinister &4&lNetwork
 
 on load:
  set {tag.beta} to "&dBeta"
@@ -21,448 +21,530 @@ on load:
  set {rank.dev} to "&c[DEV] &c"
 
 every second:
-    loop all players:
-        set tab header to "&8&m------------------%nl%&r       &c&lSinister &4&lNetwork    %nl%   &6Beta Version 1.0%nl%&8&m------------------" and footer to "&8&m------------------" for loop-player
-        set loop-player tab name to "&7%loop-player%"
-        if {tag::%loop-player's uuid%} is set:
-            if {tag.%{tag::%loop-player's uuid%}%} is not set:
-                remove {tag::%loop-player's uuid%} from {tags::%loop-player's uuid%::*}
-                delete {tag::%loop-player's uuid%}
-        if {rank::%loop-player's uuid%} is set:
-            set loop-player tab name to "%{rank.%{rank::%loop-player's uuid%}%}%%loop-player%"
-            if {rank.%{rank::%loop-player's uuid%}%} is not set:
-                delete {rank::%loop-player's uuid%}
-        if {vanish::%loop-player's uuid%} is set:
-            set loop-player tab name to "&7[HIDDEN] &7&o%loop-player%"
-            loop all players:
-                if loop-player-2 does not have permission "mod":
-                    hide loop-player-1 from loop-player-2
-                if loop-player-2 has permission "mod":
-                    reveal loop-player-1 to loop-player-2
-        if {vanish::%loop-player's uuid%} is not set:
-            reveal loop-player to all players
-            {rank::%loop-player's uuid%} is not set
-            {tag::%loop-player's uuid%} is not set
-            set loop-player tab name to "&7%loop-player%"
+	loop all players:
+		set tab header to "&8&m------------------%nl%&r       &c&lSinister &4&lNetwork    %nl%   &6Beta Version 1.0%nl%&8&m------------------" and footer to "&8&m------------------" for loop-player
+		set loop-player tab name to "&7%loop-player%"
+		if {tag::%loop-player's uuid%} is set:
+			if {tag.%{tag::%loop-player's uuid%}%} is not set:
+				remove {tag::%loop-player's uuid%} from {tags::%loop-player's uuid%::*}
+				delete {tag::%loop-player's uuid%}
+		if {rank::%loop-player's uuid%} is set:
+			set loop-player tab name to "%{rank.%{rank::%loop-player's uuid%}%}%%loop-player%"
+			if {rank.%{rank::%loop-player's uuid%}%} is not set:
+				delete {rank::%loop-player's uuid%}
+		if {vanish::%loop-player's uuid%} is set:
+			set loop-player tab name to "&7[HIDDEN] &7&o%loop-player%"
+			loop all players:
+				if loop-player-2 does not have permission "mod":
+					hide loop-player-1 from loop-player-2
+				if loop-player-2 has permission "mod":
+					reveal loop-player-1 to loop-player-2
+		if {vanish::%loop-player's uuid%} is not set:
+			reveal loop-player to all players
+			{rank::%loop-player's uuid%} is not set
+			{tag::%loop-player's uuid%} is not set
+			set loop-player tab name to "&7%loop-player%"
 
 on join:
-    teleport player to {spawn}
-    if {joined::%player's uuid%} is not set:
-        set {joined::%player's uuid%} to true
-        set {_msg} to "&b%player% &cWelcome to Sinister Network &b[##%number of all offline players%]"
-    else if {joined::%player's uuid%} is set:
-        set {_msg} to "&b%player% &7has joined the server."
-    set join message to {_msg}
+	teleport player to {spawn}
+	if {joined::%player's uuid%} is not set:
+		set {joined::%player's uuid%} to true
+		set {_msg} to "&b%player% &cWelcome to Sinister Network &b[##%number of all offline players%]"
+	else if {joined::%player's uuid%} is set:
+		set {_msg} to "&b%player% &7has joined the server."
+	set join message to {_msg}
 
 on quit:
-    set quit message to ""
-    if {vanish::%player's uuid%} is set:
-        loop all players:
-            loop-player has permission "mod"
-            send "&7[SILENT] &b%player% &7has left the server." to loop-player
-        delete {vanish::%player's uuid%}
-    else if {vanish::%player's uuid%} is not set:
-        send "&b%player% &7has left the server." to all players
+	set quit message to ""
+	if {vanish::%player's uuid%} is set:
+		loop all players:
+			loop-player has permission "mod"
+			send "&7[SILENT] &b%player% &7has left the server." to loop-player
+		delete {vanish::%player's uuid%}
+	else if {vanish::%player's uuid%} is not set:
+		send "&b%player% &7has left the server." to all players
 
 on chat:
-    cancel event
-    loop all players:
-        message contains "@%loop-player%"
-        replace all "@%loop-player%" with "&b@%loop-player%&r" in message
-        play "block_note_pling" to loop-player at volume 1
-    set {_person} to player
-    set {_uuid} to uuid of player
-    if {leplayer::%{_uuid}%::nick} is not false:
-        set {_person} to {leplayer::%{_uuid}%::nick}
-    if {tag::%player's uuid%} is set:
-        set {_s} to "%{tag.%{tag::%player's uuid%}%}%"
-        if {rank::%player's uuid%} is not set:
-            send "&7%{_person}% &8[%{_s}%&8]: &7%message%" to all players
-        else if {rank::%player's uuid%} is set:
-            send "%{rank.%{rank::%player's uuid%}%}%%{_person}% &8[%{_s}%&8]: &f%message%" to all players
-    else if {tag::%player's uuid%} is not set:
-        if {rank::%player's uuid%} is not set:
-            send "&7%player%&8: &7%message%" to all players
-        else if {rank::%player's uuid%} is set:
-            send "%{rank.%{rank::%player's uuid%}%}%%{_person}%&8: &f%message%" to all players
+	cancel event
+	loop all players:
+		message contains "@%loop-player%"
+		replace all "@%loop-player%" with "&b@%loop-player%&r" in message
+		play "block_note_pling" to loop-player at volume 1
+	set {_person} to player
+	set {_uuid} to uuid of player
+	if {leplayer::%{_uuid}%::nick} is not false:
+		set {_person} to {leplayer::%{_uuid}%::nick}
+	if {tag::%player's uuid%} is set:
+		set {_s} to "%{tag.%{tag::%player's uuid%}%}%"
+		if {rank::%player's uuid%} is not set:
+			send "&7%{_person}% &8[%{_s}%&8]: &7%message%" to all players
+		else if {rank::%player's uuid%} is set:
+			send "%{rank.%{rank::%player's uuid%}%}%%{_person}% &8[%{_s}%&8]: &f%message%" to all players
+	else if {tag::%player's uuid%} is not set:
+		if {rank::%player's uuid%} is not set:
+			send "&7%player%&8: &7%message%" to all players
+		else if {rank::%player's uuid%} is set:
+			send "%{rank.%{rank::%player's uuid%}%}%%{_person}%&8: &f%message%" to all players
 
 every 2 seconds:
-    loop all players:
-        wipe loop-player's sidebar
-        set name of sidebar of loop-player to "{@ScoreboardName}"
-        set score "&6Welcome %loop-player%" in sidebar of loop-player to 9
-        set score "" in sidebar of loop-player to 8
-        set {_online} to number of all players
-        set score "&c%{_online}%&4/10" in sidebar of loop-player to 5
+	loop all players:
+		wipe loop-player's sidebar
+		set name of sidebar of loop-player to "{@ScoreboardName}"
+		set score "&6Welcome %loop-player%" in sidebar of loop-player to 9
+		set score "" in sidebar of loop-player to 8
+		set {_online} to number of all players
+		set score "&c%{_online}%&4/10" in sidebar of loop-player to 5
 
+on hunger meter change:
+	cancel event
 
 command /tag [<offlineplayer>] [<text>]:
-    aliases: /settag
-    permission: admin
-    trigger:
-        if arg 1 and arg 2 is not set:
-            send "&c/tag [player] [tag]"
-        else if arg 1 and arg 2 is set:
-            if {tag.%arg 2%} is not set:
-                send "&cThat tag does not exist."
-            else if {tag.%arg 2%} is set:
-                remove arg 2 from {tags::%arg 1's uuid%::*}
-                add arg 2 to {tags::%arg 1's uuid%::*}
-                set {tag::%arg 1's uuid%} to arg 2
-                send "&7You have equiped %{tag.%{tag::%arg 1's uuid%}%}% &7tag." to arg 1
+	aliases: /settag
+	permission: admin
+	trigger:
+		if arg 1 and arg 2 is not set:
+			send "&c/tag [player] [tag]"
+		else if arg 1 and arg 2 is set:
+			if {tag.%arg 2%} is not set:
+				send "&cThat tag does not exist."
+			else if {tag.%arg 2%} is set:
+				remove arg 2 from {tags::%arg 1's uuid%::*}
+				add arg 2 to {tags::%arg 1's uuid%::*}
+				set {tag::%arg 1's uuid%} to arg 2
+				send "&7You have equiped %{tag.%{tag::%arg 1's uuid%}%}% &7tag." to arg 1
 
 command /tags [<text>]:
-    trigger:
-        open virtual chest inventory with size 3 named "&8%player%'s tags" to player
-        format gui slot 25 of player with cobweb named "&c&lDisable Tag" with lore "&7Right Click to disable your tag." to run:
-            close player's inventory
-            send "&7You have disabled %{tag.%{tag::%player's uuid%}%}% &7tag."
-            delete {tag::%player's uuid%}
-        format gui slot 26 of player with diamond named "&b&lPurchase Tags" with lore "&7Right Click to visit our purchasable tags." to run:
-            close player's inventory
-            send "<link:http://gingsmp.buycraft.net/category/1240521>&7Click here to visit our purchasable tags."
-        set {_num} to 0
-        loop {tags::%player's uuid%::*}:
-            set {_lv%{_num}%} to loop-value
-            format gui slot {_num} of player with name tag named "%{%loop-value%}% &7tag" with lore "&7Click to enable &8[%{%loop-value%}%&8]" to run:
-                close player's inventory
-                console command "/tag %player% %{_lv%{_num}%}%"
-            add 1 to {_num}
+	trigger:
+		open virtual chest inventory with size 3 named "&8%player%'s tags" to player
+		format gui slot 25 of player with cobweb named "&c&lDisable Tag" with lore "&7Right Click to disable your tag." to run:
+			close player's inventory
+			send "&7You have disabled %{tag.%{tag::%player's uuid%}%}% &7tag."
+			delete {tag::%player's uuid%}
+		format gui slot 26 of player with diamond named "&b&lPurchase Tags" with lore "&7Right Click to visit our purchasable tags." to run:
+			close player's inventory
+			send "<link:http://gingsmp.buycraft.net/category/1240521>&7Click here to visit our purchasable tags."
+		set {_num} to 0
+		loop {tags::%player's uuid%::*}:
+			set {_lv%{_num}%} to loop-value
+			format gui slot {_num} of player with name tag named "%{%loop-value%}% &7tag" with lore "&7Click to enable &8[%{%loop-value%}%&8]" to run:
+				close player's inventory
+				console command "/tag %player% %{_lv%{_num}%}%"
+			add 1 to {_num}
 
 command /rank [<offlineplayer>] [<text>]:
-    aliases: /setrank
-    permission: admin
-    permission message: &cYou don't have access to that command.
-    trigger:
-        if arg 2 is not set:
-            send "&c/rank <player> <rank>"
-        else if arg 2 is set:
-            if {joined::%arg 1's uuid%} is not set:
-                send "&cThat player has never joined."
-            else if {joined::%arg 1's uuid%} is set:
-                if arg 2 is "default":
-                    delete {rank::%arg 1's uuid%}
-                    send "&7You have removed &b%arg 1%'s &7rank."
-                else if arg 2 is not "default":
-                    if {rank.%arg 2%} is not set:
-                        send "&cThat rank does not exist."
-                    else if {rank.%arg 2%} is set:
-                        set {rank::%arg 1's uuid%} to arg 2
-                        send "&7You have updated &b%arg 1%'s &7rank to %{rank.%arg 2%}%"
+	aliases: /setrank
+	permission: admin
+	permission message: &cYou don't have access to that command.
+	trigger:
+		if arg 2 is not set:
+			send "&c/rank <player> <rank>"
+		else if arg 2 is set:
+			if {joined::%arg 1's uuid%} is not set:
+				send "&cThat player has never joined."
+			else if {joined::%arg 1's uuid%} is set:
+				if arg 2 is "default":
+					delete {rank::%arg 1's uuid%}
+					send "&7You have removed &b%arg 1%'s &7rank."
+				else if arg 2 is not "default":
+					if {rank.%arg 2%} is not set:
+						send "&cThat rank does not exist."
+					else if {rank.%arg 2%} is set:
+						set {rank::%arg 1's uuid%} to arg 2
+						send "&7You have updated &b%arg 1%'s &7rank to %{rank.%arg 2%}%"
 
 command /tp [<player>] [<player>]:
-    trigger:
-        if arg 1 is set:
-            if arg 2 is set:
-                if player has permission "staff.tphere":
-                    teleport arg-1 to arg-2
-                    message "&8&l[&c&lSinister &4&lNetwork&8&l] &e&lTeleporting &a&l%arg-1% &e&lto &a&l%arg-2%"
-                else:
-                    if player has permission "staff.tphere":
-                        teleport player to arg-1
-                        message "&8&l[&c&lSinister &4&lNetwork&8&l] &e&lTeleporting &a&l%arg-1% &e&lto &a&l%arg-2%"
-                    if player doesn't have permission "staff.tphere":
-                        message "&cYou don't have access to that command"
-            else:
-                set {_fail} to true
-        else:
-            set {_fail} to true
-        if {_fail} is true:
-            if player has permission "staff.tphere":
-                message "&8&l[&c&lSinister &4&lNetwork&8&l] &cUsage: /tp [player] [player]"
-            if player doesn't have permission "staff.tphere":
-                message "&cYou don't have access to that command"
+	trigger:
+		if arg 1 is set:
+			if arg 2 is set:
+				if player has permission "staff.tphere":
+					teleport arg-1 to arg-2
+					message "&8&l[&c&lSinister &4&lNetwork&8&l] &e&lTeleporting &a&l%arg-1% &e&lto &a&l%arg-2%"
+				else:
+					if player has permission "staff.tphere":
+						teleport player to arg-1
+						message "&8&l[&c&lSinister &4&lNetwork&8&l] &e&lTeleporting &a&l%arg-1% &e&lto &a&l%arg-2%"
+					if player doesn't have permission "staff.tphere":
+						message "&cYou don't have access to that command"
+			else:
+				set {_fail} to true
+		else:
+			set {_fail} to true
+		if {_fail} is true:
+			if player has permission "staff.tphere":
+				message "&8&l[&c&lSinister &4&lNetwork&8&l] &cUsage: /tp [player] [player]"
+			if player doesn't have permission "staff.tphere":
+				message "&cYou don't have access to that command"
 
 command /gmc [<offlineplayer>] [<text>]:
-    permission: staff.gmc
-    permission message: &cYou don't have access to that command
-    trigger:
-        if arg 1 is not set:
-            set player's gamemode to creative
-            send "&7Your mode has been updated to &bCreative&7."
-        else if arg 1 is set:
-            if arg 1 is offline:
-                send "&cThat player is offline."
-            else if arg 1 is online:
-                set arg 1's gamemode to creative
-                send "&7%arg 1%'s mode has been updated to &bCreative&7."
+	permission: staff.gmc
+	permission message: &cYou don't have access to that command
+	trigger:
+		if arg 1 is not set:
+			set player's gamemode to creative
+			send "&7Your mode has been updated to &bCreative&7."
+		else if arg 1 is set:
+			if arg 1 is offline:
+				send "&cThat player is offline."
+			else if arg 1 is online:
+				set arg 1's gamemode to creative
+				send "&7%arg 1%'s mode has been updated to &bCreative&7."
 
 command /gms [<offlineplayer>] [<text>]:
-    permission: staff.gms
-    permission message: &cYou don't have access to that command
-    trigger:
-        if arg 1 is not set:
-            set player's gamemode to survival
-            send "&7Your mode has been updated to &bSurvival&7."
-        else if arg 1 is set:
-            if arg 1 is offline:
-                send "&cThat player is offline."
-            else if arg 1 is online:
-                set arg 1's gamemode to survival
-                send "&7%arg 1%'s mode has been updated to &bSurvival&7."
+	permission: staff.gms
+	permission message: &cYou don't have access to that command
+	trigger:
+		if arg 1 is not set:
+			set player's gamemode to survival
+			send "&7Your mode has been updated to &bSurvival&7."
+		else if arg 1 is set:
+			if arg 1 is offline:
+				send "&cThat player is offline."
+			else if arg 1 is online:
+				set arg 1's gamemode to survival
+				send "&7%arg 1%'s mode has been updated to &bSurvival&7."
 
 command /gma [<offlineplayer>] [<text>]:
-    permission: admin
-    permission message: &cYou don't have access to that command
-    trigger:
-        if arg 1 is not set:
-            set player's gamemode to adventure
-            send "&7Your mode has been updated to &bAdventure&7."
-        else if arg 1 is set:
-            if arg 1 is offline:
-                send "&cThat player is offline."
-            else if arg 1 is online:
-                set arg 1's gamemode to adventure
-                send "&7%arg 1%'s mode has been updated to &bAdventure&7."
+	permission: admin
+	permission message: &cYou don't have access to that command
+	trigger:
+		if arg 1 is not set:
+			set player's gamemode to adventure
+			send "&7Your mode has been updated to &bAdventure&7."
+		else if arg 1 is set:
+			if arg 1 is offline:
+				send "&cThat player is offline."
+			else if arg 1 is online:
+				set arg 1's gamemode to adventure
+				send "&7%arg 1%'s mode has been updated to &bAdventure&7."
 
 command /gmsp [<offlineplayer>] [<text>]:
-    permission: staff.gmsp
-    permission message: &cYou don't have access to that command
-    trigger:
-        if arg 1 is not set:
-            set player's gamemode to spectator
-            send "&7Your mode has been updated to &bSpectator&7."
-        else if arg 1 is set:
-            if arg 1 is offline:
-                send "&cThat player is offline."
-            else if arg 1 is online:
-                set arg 1's gamemode to spectator
-                send "&7%arg 1%'s mode has been updated to &bSpectator&7."
+	permission: staff.gmsp
+	permission message: &cYou don't have access to that command
+	trigger:
+		if arg 1 is not set:
+			set player's gamemode to spectator
+			send "&7Your mode has been updated to &bSpectator&7."
+		else if arg 1 is set:
+			if arg 1 is offline:
+				send "&cThat player is offline."
+			else if arg 1 is online:
+				set arg 1's gamemode to spectator
+				send "&7%arg 1%'s mode has been updated to &bSpectator&7."
+
+command /heal [<offlineplayer>] [<text>]:
+	permission: staff.heal
+	permission message: {@prefix} &cYou don't have access to that command
+	trigger:
+		if arg 1 is not set:
+			set player's health to 10
+			send "{@prefix} &cYour health was restored."
+		else if arg 1 is set:
+			if arg 1 is offline:
+				send "{@prefix} &cThat player is offline!"
+			if arg 1 is online:
+				set arg 1's health to 10
+				send "{@prefix} &c%arg 1% has been healed."
+
+command /feed [<offlineplayer>] [<text>]:
+	permission: staff.feed
+	permission message: {@prefix} &cYou don't have access to that command
+	trigger:
+		if arg 1 is not set:
+			set player's hunger to 10
+			send "{@prefix} &cYour hunger was restored."
+		else if arg 1 is set:
+			if arg 1 is offline:
+				send "{@prefix} &cThat player is offline!"
+			if arg 1 is online:
+				set arg 1's hunger to 10
+				send "{@prefix} &C%arg 1%'s hunger was restored."
 
 
-                # Useless Commands
-                # Version 1.0
+				# Useless Commands
+				# Version 1.0
 
 command /racism:
-    aliases: /tqnk
-    permission: op
-    trigger:
-        loop 20 times:
-            broadcast "&4&lracism has activated"
+	aliases: /tqnk
+	permission: op
+	trigger:
+		loop 20 times:
+			broadcast "&4&lracism has activated"
 
 command /gingey:
-    permission: op
-    trigger:
-        loop 20 times:
-            broadcast "&6&lGingey sucks.... he should just give up"
+	permission: op
+	trigger:
+		loop 20 times:
+			broadcast "&6&lGingey.exe has stopped working"
 
 command /forest:
-    permission: op
-    trigger:
-        loop 20 times:
-            broadcast "&a&lForestHunters is to be pro--demoted. kthx"
+	permission: op
+	trigger:
+		loop 20 times:
+			broadcast "&a&lForestHunters is to be pro--demoted. kthx"
 
 command /abcs:
-    permission: op
-    trigger:
-        loop 20 times:
-            broadcast "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+	permission: op
+	trigger:
+		loop 20 times:
+			broadcast "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
-            # Useful Commands
-            # Version 1.1
+command /ruin [<offlineplayer>] [<text>]:
+	permission: op
+	trigger:
+		if arg 1 is not set:
+			set player's hunger to 5
+			set player's health to 5
+			send "{@prefix} &cYou're life has been runied!"
+		if arg 1 is set:
+			if arg 1 is offline:
+				send "{@prefix} &cCannot ruin that players life, seems that they're offline."
+			if arg 1 is online:
+				set arg 1's hunger to 5
+				set arg 1's health to 5
+				send "{@prefix} &cRuined %arg 1%'s life!'"
+	
 
-command /fly:
-    permission: staff.fly
-    permission message: &cYou don't have access to that command.
-    trigger:
-        if {fly.%player%} is not set:
-            set {fly.%player%} to false
-        if {fly.%player%} is false:
-            send "&aFlight mode is on"
-            set {fly.%player%} to true
-            set player's flight mode to true
-        else:
-            send "&cFlight mode is off"
-            set {fly.%player%} to false
-            set player's flight mode to false
+			# Useful Commands
+			# Version 1.1
+
+command /fly [offlineplayer] [<text>]:
+	permission: staff.fly
+	permission message: &cYou don't have access to that command.
+	trigger:
+		if {fly.%player%} is not set:
+			set {fly.%player%} to false
+		if {fly.%player%} is false:
+			send "&aFlight mode is on"
+			set {fly.%player%} to true
+			set player's flight mode to true
+		else:
+			send "&cFlight mode is off"
+			set {fly.%player%} to false
+			set player's flight mode to false
 
 command /help:
-    trigger:
-        send "&8----{@prefix}&8----"
-        if player has permission "op":
-            send "&c/forest - Spams chat with ForestHunters pro... demotion."
-            send "&c/gingey - Spams the chat with _Gingey_'s Skript Stress."
-            send "&C/racism - Spams chat with racism activation."
-            send "&c/abcs - Spams chat with the ABCs."
-            send "&c/rank <user> - Sets a rank for a user."
-            send "&c/tag <user> - Sets a tag for a user."
-            send "&c/autobc1 - Forcefully sends the first auto broadcast."
-            send "&c/autobc2 - Forcefully sends the second auto broadcast."
-            send "&c/autobc3 - Forcefully sends the third auto broadcast."
-            send "&c/broadcast <message> - Sends a message to the whole server."
-        if player has permission "staff":
-            send "&3/help - Displays this Menu."
-            send "&3/forums - Messages you our Forums Page."
-            send "&3/discord - Messages you our Official Discord Server."
-            send "&3/apply - Messages you the link to apply for staff."
-            send "&8Do /help 2 to see staff commands"
-        if player has permission "donor":
-            send "&3/donorchat <message> - Chat in the donor's only chat!"
-        else:
-            send "&3/help - Displays this Menu."
-            send "&3/forums - Messages you our Forums Page."
-            send "&3/discord - Messages you our Official Discord Server."
-            send "&3/apply - Messages you the link to apply for staff."
+	trigger:
+		send "&8----{@prefix}&8----"
+		if player has permission "donor":
+			send "&3/help - Displays this Menu."
+			send "&3/forums - Messages you our Forums Page."
+			send "&3/discord - Messages you our Official Discord Server."
+			send "&3/apply - Messages you the link to apply for staff."
+			send "&3/tags - Changes or Disables your Current Prefix."
+			send "&3/report <user> - Reports a user to the staff."
+			send "&3/donorchat <message> - Chat in the donor's only chat!"
+		if player has permission "op":
+			send "&c/forest - Spams chat with ForestHunters pro... demotion."
+			send "&c/gingey - Spams chat with with _Gingey_'s Skript Stress."
+			send "&c/racism - Spams chat with racism activation."
+			send "&c/abcs - Spams chat with the ABCs."
+			send "&c/rank <user> - Sets a rank for a user."
+			send "&c/tag <user> - Sets a tag for a user."
+			send "&c/autobc1 - Forcefully sends the first auto broadcast."
+			send "&c/autobc2 - Forcefully sends the second auto broadcast."
+			send "&c/autobc3 - Forcefully sends the third auto broadcast."
+			send "&c/broadcast <message> - Sends a message to the whole server."
+		if player has permission "staff":
+			send "&8Do /help2 for a list of staff commands."
+		else:
+			send "&3/help - Displays this Menu."
+			send "&3/forums - Messages you our Forums Page."
+			send "&3/discord - Messages you our Official Discord Server."
+			send "&3/apply - Messages you the link to apply for staff."
+			send "&3/tags - Changes or Disables your Current Prefix."
+			send "&3/report <user> - Reports a user to the staff."
 
+command /help2:
+	trigger:
+		send "&8----{@prefix}&8----"
+		if player has permission "staff":
+			send "&3/tp - Teleports to a player."
+			send "&3/gmc - Changes your Gamemode into Creative."
+			send "&3/gms - Changes your Gamemode into Survival."
+			send "&3/gmsp - Changes your Gamemode into Spectator"
+			send "&3/fly - Enables or Disables Flight."
+			send "&3/heal - Removes all Buffs/Debuffs and replenish Health."
+			send "&3/feed - Replenishes Food Bar."
+			send "&3/chatclear - Clears the Chat."
+			send "&3/pc - Broadcasts a message."
+			send "&3/sc - Chat in the staff's only chat!"
+		if player has permission "admin":
+			send "&3/tag <user> - Sets a tag for a user."
+			send "&3/rank <user> - Sets a rank for a user."
+			send "&3/tp - Teleports to a player."
+			send "&3/gmc - Changes your Gamemode into Creative."
+			send "&3/gms - Changes your Gamemode into Survival."
+			send "&3/gmsp - Changes your Gamemode into Spectator"
+			send "&3/gma - Changes your Gamemode into Adventure."
+			send "&3/fly - Enables or Disables Flight."
+			send "&3/heal - Removes all Buffs/Debuffs and replenish Health."
+			send "&3/feed - Replenishes Food Bar."
+			send "&3/chatclear - Clears the Chat."
+			send "&3/pc <message> - Broadcasts a message."
+			send "&3/bc <message> - Broadcasts a message."
+		if player has permission "mod":
+			send "&8Do /help3 for staff commands page 2."
+		else:
+			send "&8Do /help to see a list of commands!"
 
+command /help3:
+	trigger:
+		send "&8----{@prefix}&8----"
+		if player has permission "mod":
+			send "&3/v - Go invisble."
+		else:
+			send "&8Do /help to see a list of commands!"
 
-# The following will only work on self
-# I need to enable it to work on other players
-
-command /heal:
-    permission: staff.heal
-    trigger:
-        heal the player
-        send "&aYou've been healed."
-
-command /feed:
-    permission: staff.feed
-    trigger:
-        feed the player
-        send "&aYou've been feed."
-
-#
-#
+command /report <player> <text>:
+	trigger:
+		send "{@prefix} &cYou reported %arg-1%"
+		loop all players:
+			if loop-player has permission "staff":
+				send "&8[&cReport&8]" to loop-player
+				send "&cReport by: &6%player%" to loop-player
+				send "&CPlayer Reported: &6%arg-1%" to loop-player
+				send "&cReason: &6%arg-2%" to loop-player
+		send "{@prefix} &cStaff have been notified."
 
 command /nick [<text>]:
-    aliases: /setnick
-    permission: donor.nick
-    permission message: &cYou need to be at least &b[MVP] rank to use this command.
-    trigger:
-        set {_uuid} to uuid of player
-        if {leplayer::%{_uuid}%::nick} is not set:
-            send "&cAn error occurred. Contact an administrator"
-        else:
-            if arg-1 is not set:
-                set {_whattodo} to "remove"
-            else if arg-1 is "off" or "remove":
-                set {_whattodo} to "remove"
-            else if length of arg-1 is more than 16:
-                set {_whattodo} to "toolong"
-            else:
-                set {_whattodo} to "add"
-            if {_whattodo} is "remove":
-                set {leplayer::%{_uuid}%::nick} to false
-                send "&7You have &cunset &7your &6nickname."
-            else if {_whattodo} is "toolong":
-                send "&cThe nickname can not be longer than 16 characters."
-            else if {_whattodo} is "add":
-                set {leplayer::%{_uuid}%::nick} to uncolored arg-1
-                send "&7You have set your nickname to &e%arg-1%"
+	aliases: /setnick
+	permission: donor.nick
+	permission message: &cYou need to be at least &b[MVP] rank to use this command.
+	trigger:
+		set {_uuid} to uuid of player
+		if {leplayer::%{_uuid}%::nick} is not set:
+			send "&cAn error occurred. Contact an administrator"
+		else:
+			if arg-1 is not set:
+				set {_whattodo} to "remove"
+			else if arg-1 is "off" or "remove":
+				set {_whattodo} to "remove"
+			else if length of arg-1 is more than 16:
+				set {_whattodo} to "toolong"
+			else:
+				set {_whattodo} to "add"
+			if {_whattodo} is "remove":
+				set {leplayer::%{_uuid}%::nick} to false
+				send "&7You have &cunset &7your &6nickname."
+			else if {_whattodo} is "toolong":
+				send "&cThe nickname can not be longer than 16 characters."
+			else if {_whattodo} is "add":
+				set {leplayer::%{_uuid}%::nick} to uncolored arg-1
+				send "&7You have set your nickname to &e%arg-1%"
 
 
 command /discord:
-    trigger:
-        send "{@prefix} &cJoin the discord <link:https://discord.gg/XFKyxnV>&chere<reset>"
+	trigger:
+		send "{@prefix} &cJoin the discord <link:https://discord.gg/XFKyxnV>&chere<reset>"
 
 command /forums:
-    trigger:
-        send "{@prefix} &cClick <link:https://sinnetwork.forums.gg/>&ehere<reset> &cfor the forums"
+	trigger:
+		send "{@prefix} &cClick <link:https://sinnetwork.forums.gg/>&ehere<reset> &cfor the forums"
 
 command /apply:
-    trigger:
-        send "{@prefix} &cClick <link:http://bit.ly/SinisterNetworkApplication>&4here<reset> &cto apply!"
+	trigger:
+		send "{@prefix} &cClick <link:http://bit.ly/SinisterNetworkApplication>&4here<reset> &cto apply!"
 
 command /donorchat [<text>]:
-    aliases: /dc
-    permission: donor.chat
-    trigger:
-        if arg-1 is not set:
-            send "&c/sc (message)"
-        else:
-            if player has permission "staff.chat":
-                sendToDonor(colored arg-1, player)
+	aliases: /dc
+	permission: donor.chat
+	trigger:
+		if arg-1 is not set:
+			send "&c/sc (message)"
+		else:
+			if player has permission "staff.chat":
+				sendToDonor(colored arg-1, player)
 function sendToDonor(msg: text, p: player):
-    set {_fun} to uuid of {_p}
-    send "&6[DONOR] %{rank.%{rank::%{_fun}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff.chat"]
+	set {_fun} to uuid of {_p}
+	send "&6[DONOR] %{rank.%{rank::%{_fun}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff.chat"]
 
 
-    # Staff Commands
-    # Version 1.0
+	# Staff Commands
+	# Version 1.0
 
 command /vanish [<text>]:
-    aliases: /v
-    permission: mod
-    permission message: &cYou don't have access to that command.
-    trigger:
-        if {vanish::%player's uuid%} is not set:
-            set {vanish::%player's uuid%} to true
-            loop all players:
-                loop-player has permission "mod"
-                send "&b%player% &7has entered Vanish." to loop-player
-        else if {vanish::%player's uuid%} is set:
-            delete {vanish::%player's uuid%}
-            loop all players:
-                loop-player has permission "mod"
-                send "&b%player% &7has left Vanish." to loop-player
+	aliases: /v
+	permission: mod
+	permission message: &cYou don't have access to that command.
+	trigger:
+		if {vanish::%player's uuid%} is not set:
+			set {vanish::%player's uuid%} to true
+			loop all players:
+				loop-player has permission "mod"
+				send "&b%player% &7has entered Vanish." to loop-player
+		else if {vanish::%player's uuid%} is set:
+			delete {vanish::%player's uuid%}
+			loop all players:
+				loop-player has permission "mod"
+				send "&b%player% &7has left Vanish." to loop-player
 
 command /broadcast [<text>]:
-    aliases: /bc
-    permission: admin
-    permission message: &cYou don't have access to that command
-    trigger:
-        if arg 1 is not set:
-            send "&cYo, you need a message too!"
-        else:
-            broadcast "{@prefix} &f%colored arg-1%"
+	aliases: /bc
+	permission: admin
+	permission message: &cYou don't have access to that command
+	trigger:
+		if arg 1 is not set:
+			send "&cYo, you need a message too!"
+		else:
+			broadcast "{@prefix} &f%colored arg-1%"
 
 command /chatclear:
-    permission: staff.cc
-    aliases: /cc , /clearchat
-    trigger:
-        loop 100 times:
-            broadcast ""
-        broadcast "{@prefix} &eChat has been cleared."
+	permission: staff.cc
+	aliases: /cc , /clearchat
+	trigger:
+		loop 100 times:
+			broadcast ""
+		broadcast "{@prefix} &eChat has been cleared."
 
 command /pc [<text>]:
-    permission: staff.pc
-    permission message: &cYou don't have permission for this command!
-    trigger:
-        if arg 1 is not set:
-            send "&c/pc (msg)"
-        else:
-            broadcast "{@prefix} &f%arg 1%"
+	permission: staff.pc
+	permission message: &cYou don't have permission for this command!
+	trigger:
+		if arg 1 is not set:
+			send "&c/pc (msg)"
+		else:
+			broadcast "{@prefix} &f%arg 1%"
 
 command /staffchat [<text>]:
-    aliases: /sc
-    permission: staff.chat
-    trigger:
-        if arg-1 is not set:
-            send "&c/sc (message)"
-        else:
-            if player has permission "staff.chat":
-                sendToStaff(colored arg-1, player)
+	aliases: /sc
+	permission: staff.chat
+	trigger:
+		if arg-1 is not set:
+			send "&c/sc (message)"
+		else:
+			if player has permission "staff.chat":
+				sendToStaff(colored arg-1, player)
 function sendToStaff(msg: text, p: player):
-    set {_epic} to uuid of {_p}
-    send "&d[STAFF] %{rank.%{rank::%{_epic}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff.chat"]
+	set {_epic} to uuid of {_p}
+	send "&d[STAFF] %{rank.%{rank::%{_epic}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff.chat"]
 
-    # Auto broadcast
+	# Auto broadcast
 
 on load:
-    add "{@prefix} &6Want to apply for staff? Do &c/apply &6to apply!" to {tqnk::*}
-    add "{@prefix} &6Interact with the comunity on the forums, do &c/forums" to {tqnk::*}
-    add "{@prefix} &6Stay up to date with Sinister Network, join the discord, do &C/discord" to {tqnk::*}
+	add "{@prefix} &6Want to apply for staff? Do &c/apply &6to apply!" to {tqnk::*}
+	add "{@prefix} &6Interact with the comunity on the forums, do &c/forums" to {tqnk::*}
+	add "{@prefix} &6Stay up to date with Sinister Network, join the discord, do &C/discord" to {tqnk::*}
 
 every 600 seconds:
-    set {_autobroad} to a random element out of {tqnk::*}
-    broadcast "%{_autobroad}%"
+	set {_autobroad} to a random element out of {tqnk::*}
+	broadcast "%{_autobroad}%"
 
-    # Debug Commands (Force Run Things such as auto broadcast)
+	# Debug Commands (Force Run Things such as auto broadcast)
 
 command /autobc1:
-    aliases: /abc1
-    permission: op
-    trigger:
-        broadcast "{@prefix} &6Want to apply for staff? Do &c/apply &6to apply!"
+	aliases: /abc1
+	permission: op
+	trigger:
+		broadcast "{@prefix} &6Want to apply for staff? Do &c/apply &6to apply!"
 
 command /autobc2:
-    aliases: /abc2
-    permission: op
-    trigger:
-        broadcast "{@prefix} &6Interact with the comunity on the forums, do &c/forums"
+	aliases: /abc2
+	permission: op
+	trigger:
+		broadcast "{@prefix} &6Interact with the comunity on the forums, do &c/forums"
 
 command /autobc3:
-    aliases: /abc3
-    permission: op
-    trigger:
-        broadcast "{@prefix} &6Stay up to date with Sinister Network, join the discord, do &C/discord"
+	aliases: /abc3
+	permission: op
+	trigger:
+		broadcast "{@prefix} &6Stay up to date with Sinister Network, join the discord, do &C/discord"
