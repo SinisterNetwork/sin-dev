@@ -420,7 +420,7 @@ command /report <player> <text>:
 
 command /nick [<text>]:
 	aliases: /setnick
-	permission: donor.nick
+	permission: donor
 	permission message: &cYou need to be at least &b[MVP] rank to use this command.
 	trigger:
 		set {_uuid} to uuid of player
@@ -459,12 +459,12 @@ command /apply:
 
 command /donorchat [<text>]:
 	aliases: /dc
-	permission: donor.chat
+	permission: donor
 	trigger:
 		if arg-1 is not set:
 			send "&c/sc (message)"
 		else:
-			if player has permission "staff.chat":
+			if player has permission "donor":
 				sendToDonor(colored arg-1, player)
 function sendToDonor(msg: text, p: player):
 	set {_fun} to uuid of {_p}
