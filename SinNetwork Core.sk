@@ -51,18 +51,18 @@ on join:
 		set {joined::%player's uuid%} to true
 		set {_msg} to "{@prefix} &4%player% &cWelcome to Sinister Network &4[##%number of all offline players%]"
 	else if {joined::%player's uuid%} is set:
-		set {_msg} to "&4%player% &7has joined the server."
+		set {_msg} to "{@prefix} &4%player% &chas joined the server."
 	set join message to {_msg}
 
 on quit:
 	set quit message to ""
 	if {vanish::%player's uuid%} is set:
 		loop all players:
-			loop-player has permission "mod"
+			loop-player has permission "staff"
 			send "&7[SILENT] &b%player% &7has left the server." to loop-player
 		delete {vanish::%player's uuid%}
 	else if {vanish::%player's uuid%} is not set:
-		send "&b%player% &7has left the server." to all players
+		send "{@prefix} &4%player% &chas left the server." to all players
 
 on chat:
 	cancel event
@@ -317,7 +317,7 @@ command /ruin [<offlineplayer>] [<text>]:
 			# Version 1.1
 
 command /fly [offlineplayer] [<text>]:
-	permission: staff.fly
+	permission: donor
 	permission message: &cYou don't have access to that command.
 	trigger:
 		if {fly.%player%} is not set:
@@ -468,7 +468,7 @@ command /donorchat [<text>]:
 				sendToDonor(colored arg-1, player)
 function sendToDonor(msg: text, p: player):
 	set {_fun} to uuid of {_p}
-	send "&6[DONOR] %{rank.%{rank::%{_fun}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff.chat"]
+	send "&6[DONOR] %{rank.%{rank::%{_fun}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "donor"]
 
 
 	# Staff Commands
@@ -476,18 +476,18 @@ function sendToDonor(msg: text, p: player):
 
 command /vanish [<text>]:
 	aliases: /v
-	permission: mod
+	permission: staff
 	permission message: &cYou don't have access to that command.
 	trigger:
 		if {vanish::%player's uuid%} is not set:
 			set {vanish::%player's uuid%} to true
 			loop all players:
-				loop-player has permission "mod"
+				loop-player has permission "staff"
 				send "&b%player% &7has entered Vanish." to loop-player
 		else if {vanish::%player's uuid%} is set:
 			delete {vanish::%player's uuid%}
 			loop all players:
-				loop-player has permission "mod"
+				loop-player has permission "staff"
 				send "&b%player% &7has left Vanish." to loop-player
 
 command /broadcast [<text>]:
@@ -501,7 +501,7 @@ command /broadcast [<text>]:
 			broadcast "{@prefix} &f%colored arg-1%"
 
 command /chatclear:
-	permission: staff.cc
+	permission: staff
 	aliases: /cc , /clearchat
 	trigger:
 		loop 100 times:
@@ -509,7 +509,7 @@ command /chatclear:
 		broadcast "{@prefix} &eChat has been cleared."
 
 command /pc [<text>]:
-	permission: staff.pc
+	permission: staff
 	permission message: &cYou don't have permission for this command!
 	trigger:
 		if arg 1 is not set:
@@ -519,21 +519,21 @@ command /pc [<text>]:
 
 command /staffchat [<text>]:
 	aliases: /sc
-	permission: staff.chat
+	permission: staff
 	trigger:
 		if arg-1 is not set:
 			send "&c/sc (message)"
 		else:
-			if player has permission "staff.chat":
+			if player has permission "staff":
 				sendToStaff(colored arg-1, player)
 function sendToStaff(msg: text, p: player):
 	set {_epic} to uuid of {_p}
-	send "&d[STAFF] %{rank.%{rank::%{_epic}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff.chat"]
+	send "&d[STAFF] %{rank.%{rank::%{_epic}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "staff"]
 
 command /punishes:
 	aliases: punish
 	trigger:
-		if player has permission "staff.punish":
+		if player has permission "staff":
 			send "&8----{@prefix}&8----"
 			send "&3/warn <player> - Warns a player."
 			send "&3/revertwarn <player> - Reverts the Warning from a player."
