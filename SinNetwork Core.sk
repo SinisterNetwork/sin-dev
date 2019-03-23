@@ -19,6 +19,7 @@ on load:
  set {rank.vip} to "&2[VIP] &2"
  set {rank.mvp} to "&b[MVP] &b"
  set {rank.dev} to "&c[DEV] &c"
+ set {rank.mvpplus} to "&b[MVP&c+&b] &b"
 
 every second:
 	loop all players:
@@ -27,7 +28,6 @@ every second:
 		if {tag::%loop-player's uuid%} is set:
 			if {tag.%{tag::%loop-player's uuid%}%} is not set:
 				remove {tag::%loop-player's uuid%} from {tags::%loop-player's uuid%::*}
-				delete {tag::%loop-player's uuid%}
 		if {rank::%loop-player's uuid%} is set:
 			set loop-player tab name to "%{rank.%{rank::%loop-player's uuid%}%}%%loop-player%"
 			if {rank.%{rank::%loop-player's uuid%}%} is not set:
@@ -263,8 +263,15 @@ command /feed [<offlineplayer>] [<text>]:
 				send "{@prefix} &C%arg 1%'s hunger was restored."
 
 
-				# Useless Commands
-				# Version 1.0
+# Useless Commands
+# Version 1.0
+
+command /redstoneblock:
+	aliases: /redstone , /rsb
+	permission: redstone.block
+	trigger:
+		loop 100 times:
+			broadcast "&6&lthank you atom very &c&lredstone_block"
 
 command /racism:
 	aliases: /tqnk
@@ -297,6 +304,13 @@ command /sentrii:
 		loop 20 times:
 			broadcast "&6Whos is the most inactive staff member? Sentrii_!!!"
 
+command /kikiom:
+	aliases: /penguin
+	permission: op
+	trigger:
+		loop 20 times:
+			broadcast "&3&lHere lies TheGxmingPenguin, the most stubborn flightless bird."
+
 command /ruin [<offlineplayer>] [<text>]:
 	permission: op
 	trigger:
@@ -311,6 +325,10 @@ command /ruin [<offlineplayer>] [<text>]:
 				set arg 1's hunger to 5
 				set arg 1's health to 5
 				send "{@prefix} &cRuined %arg 1%'s life!'"
+
+command /justgingey:
+	trigger:
+		send "&6May <link:https://www.youtube.com/watch?v=mxKNsEq_Jnw>&6JustGingey<reset> &6rest in peace."
 
 
 			# Useful Commands
@@ -335,6 +353,7 @@ command /help:
 	trigger:
 		send "&8----{@prefix}&8----"
 		if player has permission "donor":
+			send "&6/justgingey - JustGingey's Memorial. Rest in Peace."
 			send "&3/help - Displays this Menu."
 			send "&3/forums - Messages you our Forums Page."
 			send "&3/discord - Messages you our Official Discord Server."
@@ -346,6 +365,7 @@ command /help:
 			send "&c/forest - Spams chat with ForestHunters pro... demotion."
 			send "&c/gingey - Spams chat with with _Gingey_'s Skript Stress."
 			send "&c/racism - Spams chat with racism activation."
+			send "&c/kikiom - Spams chat with TheGxmingPenguin's death."
 			send "&c/abcs - Spams chat with the ABCs."
 			send "&c/rank <user> - Sets a rank for a user."
 			send "&c/tag <user> - Sets a tag for a user."
@@ -356,12 +376,14 @@ command /help:
 		if player has permission "staff":
 			send "&8Do /help2 for a list of staff commands."
 		else:
+			send "&6/justgingey - JustGingey's Memorial. Rest in Peace."
 			send "&3/help - Displays this Menu."
 			send "&3/forums - Messages you our Forums Page."
 			send "&3/discord - Messages you our Official Discord Server."
 			send "&3/apply - Messages you the link to apply for staff."
 			send "&3/tags - Changes or Disables your Current Prefix."
 			send "&3/report <user> - Reports a user to the staff."
+			send "&3/menu - Select a game to play."
 
 command /help2:
 	trigger:
