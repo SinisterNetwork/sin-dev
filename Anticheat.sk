@@ -1,0 +1,105 @@
+function Detect(p: player, r:text):
+    add 1 to {alert1::%{_p}%}
+    loop all players:
+        loop-player has permission "staff":
+            send "{@prefix} &4&lANTI-CHEAT &8>> &a&l%{_p}% &c&ldetected &4&l%{_r}% &6(%{alert1::%{_p}%}%)" to loop-player
+on damage:
+    set {cooldown.%victim%} to now
+
+on any move:
+    player doesn't have permission "essentials.fly"
+    set {_lasty} to {yloc.%player%}
+    set {_diffy} to difference between y location of player and {yloc.%player%}
+    set {yloc.%player%} to y location of player
+    if {_diffy} != 0:
+        if "%{_diffy}%" = "%{lasposy.%player%}%":
+            if "%{_diffy}%" != "0.08":
+                {vl08.%player%} is set
+                clear {v108.%player%}
+            if "%{_diffy}%" != "0.16":
+                {vl16.%player%} is set
+                clear {v116.%player%}
+            if "%{_diffy}%" != "0.42":
+                {vl42.%player%} is set
+                clear {v142.%player%}
+
+            if "%{_diffy}%" != "0.23":
+                {vl23.%player%} is set
+                clear {v123.%player%}
+            if "%{_diffy}%" != "0.65":
+                {vl65.%player%} is set
+                clear {v165.%player%}
+            if "%{_diffy}%" != "0.12":
+                {vl12.%player%} is set
+                clear {v112.%player%}
+            if "%{_diffy}%" != "0.04":
+                {vl04.%player%} is set
+                clear {v104.%player%}
+            player's gamemode is not creative
+            if block at player is ladder or vines:
+                stop
+            loop blocks in radius 3 around player:
+                loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or ladder or stairs or slab
+                clear {vlsame.%player%}
+                stop
+            wait 3 ticks
+            if {cooldown.%player%} is set:
+                difference between {cooldown.%player%} and now < 0.3 seconds
+                clear {vlsame.%player%}
+                stop
+            if "%{_diffy}%" = "0.08":
+
+                add 1 to {vl08.%player%}
+                {vl08.%player%} > 12
+                Detect(player, "Fly V1 &e%{_diffy}%")
+            if "%{_diffy}%" = "0.16":
+
+                add 1 to {vl16.%player%}
+                {vl16.%player%} > 2
+                Detect(player, "Fly V1 &e%{_diffy}%")
+            if "%{_diffy}%" = "0.42":
+
+                add 1 to {vl42.%player%}
+                {vl42.%player%} > 2
+                Detect(player, "Fly V1 &e%{_diffy}%")
+            if "%{_diffy}%" = "0.23":
+
+                add 1 to {vl23.%player%}
+                {vl23.%player%} > 2
+                Detect(player, "Fly V1 &e%{_diffy}%")
+            if "%{_diffy}%" = "0.12":
+                set {_bpos} to block 1 north 1 west of block 2 above player
+                set {_bpos2} to block 1 south 1 east of block above player
+                loop blocks within {_bpos} to {_bpos2}:
+                    loop-block is not air
+                    set {lasypos.%player%} to {_diffy}
+                    stop
+                add 1 to {vl12.%player%}
+                {vl12.%players%} > 2
+                Detect(player, "Fly V1 &d 0.12")
+            if "%{_diffy}%" = "0.4":
+                set {_bpos} to block 1 north 1 west of block 2 above player
+                set {_bpos2} to block 1 south 1 east of block above player
+                loop blocks within {_bpos} to {_bpos2}:
+                    loop-block is not air
+                    stop
+                add 1 to {vl04.%player%}
+                {vl04.%player%} > 2
+                Detect(player, "Fly V1 &d 0.4")
+            if "%{_diffy}%" = "0.65":
+
+                add 1 to {vl65.%player%}
+                {vl65.%player%} > 2
+                Detect(player, "Fly V1 &1 %{_diffy}%")
+            if "%{_b}%" = "0.42" or "0.23" or "0.12" or "0.65" or "0.08" or "0.16" or "0.4":
+                stop
+            add 1 to {vlsame.%player%}
+            if {_diffy} >= 0.8:
+                set {_maxvl} to 1
+            else:
+                set {_maxvl} to 3
+            {vlsame.%player%} > {_maxvl}
+            Detect(player, "Fly V1 &a%{_diffy}%")
+        else:
+            set {lasposy.%player%} to {_diffy}
+            clear {vlsame.%player%}
