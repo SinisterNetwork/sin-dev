@@ -9,7 +9,7 @@ options:
 	QuitMessage: true
 
 command /setspawn:
-	aliases: spawnset, sethub, hubset, setlobby, lobbyset
+	aliases: /spawnset
 	permission: spawn.setspawn
 	permission message: &cSorry, but you don't have permission to execute this command!
 	description: Set spawn at your location.
@@ -19,9 +19,6 @@ command /setspawn:
 
 command /spawn [<player>]:
 	aliases: /stuck
-	permission: spawn.spawn
-	permission message: &cSorry, but you don't have permission to execute this command!
-	description: Teleport you to spawn.
 	trigger:
 		if {spawn} isn't set:
 			message "&4Error:&c spawn is not set!"
