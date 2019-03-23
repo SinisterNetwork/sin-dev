@@ -10,6 +10,8 @@ on load:
 on join:
     resetPlayerData(player)
 
+
+
 # The Cache, where we grab players data from
 function resetPlayerData(p: player):
     set {_uuid} to uuid of {_p}
