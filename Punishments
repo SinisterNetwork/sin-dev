@@ -89,7 +89,7 @@ command /kick [<offline player>] [<text>]:
 			else:
 				kick arg-1
 				broadcast "&b%player% &7kicked &b%arg-1%"
-		else:
+        else:
 			send "&cPlayer is offline."
 
 command /ban [<offline player>] [<text>]:
