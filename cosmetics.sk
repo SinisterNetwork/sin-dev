@@ -1,0 +1,27 @@
+command /fly [offlineplayer] [<text>]:
+	permission: donor.fly
+	permission message: &cYou don't have access to that command.
+	trigger:
+		if {fly.%player%} is not set:
+			set {fly.%player%} to false
+		if {fly.%player%} is false:
+			send "&aFlight mode is on"
+			set {fly.%player%} to true
+			set player's flight mode to true
+		else:
+			send "&cFlight mode is off"
+			set {fly.%player%} to false
+			set player's flight mode to false
+
+command /donorchat [<text>]:
+	aliases: /dc
+	permission: donor
+	trigger:
+		if arg-1 is not set:
+			send "&c/sc (message)"
+		else:
+			if player has permission "donor":
+				sendToDonor(colored arg-1, player)
+function sendToDonor(msg: text, p: player):
+	set {_fun} to uuid of {_p}
+	send "&6[DONOR] %{rank.%{rank::%{_fun}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "donor"]
