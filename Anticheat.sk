@@ -1,3 +1,6 @@
+options:
+	prefix: &8[&c&lSinister &4&lNetwork&8]
+
 function Detect(p: player, r:text):
     add 1 to {alert1::%{_p}%}
     loop all players:
@@ -7,7 +10,7 @@ on damage:
     set {cooldown.%victim%} to now
 
 on any move:
-    player doesn't have permission "essentials.fly"
+    player doesn't have permission "donor.fly"
     set {_lasty} to {yloc.%player%}
     set {_diffy} to difference between y location of player and {yloc.%player%}
     set {yloc.%player%} to y location of player
