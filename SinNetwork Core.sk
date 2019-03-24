@@ -9,17 +9,16 @@ on load:
  set {tag.hacker} to "&7Hacker"
  set {tag.big spender} to "&aBig &2Spender"
 
- set {rank.builder} to "&d[BUILD TEAM] &d"
- set {rank.jrmod} to "&e[JR.MOD] &e"
- set {rank.mod} to "&e[MOD] &e"
- set {rank.srmod} to "&6[SR.MOD] &6"
- set {rank.admin} to "&c[ADMIN] &c"
- set {rank.youtuber} to "&c[&fYOUTUBE&c] &c"
  set {rank.owner} to "&3[OWNER] &3"
+ set {rank.dev} to "&c[DEV] &c"
+ set {rank.admin} to "&c[ADMIN] &c"
+ set {rank.srmod} to "&6[SR.MOD] &6"
+ set {rank.mod} to "&e[MOD] &e"
+ set {rank.jrmod} to "&e[JR.MOD] &e"
+ set {rank.builder} to "&d[BUILD TEAM] &d"
+ set {rank.youtuber} to "&c[&fYOUTUBE&c] &c"
  set {rank.vip} to "&2[VIP] &2"
  set {rank.mvp} to "&b[MVP] &b"
- set {rank.dev} to "&c[DEV] &c"
- set {rank.mvpplus} to "&b[MVP&c+&b] &b"
 
 every second:
 	loop all players:
@@ -334,32 +333,10 @@ command /justgingey:
 			# Useful Commands
 			# Version 1.1
 
-command /fly [offlineplayer] [<text>]:
-	permission: donor
-	permission message: &cYou don't have access to that command.
-	trigger:
-		if {fly.%player%} is not set:
-			set {fly.%player%} to false
-		if {fly.%player%} is false:
-			send "&aFlight mode is on"
-			set {fly.%player%} to true
-			set player's flight mode to true
-		else:
-			send "&cFlight mode is off"
-			set {fly.%player%} to false
-			set player's flight mode to false
-
 command /help:
 	trigger:
 		send "&8----{@prefix}&8----"
 		if player has permission "donor":
-			send "&6/justgingey - JustGingey's Memorial. Rest in Peace."
-			send "&3/help - Displays this Menu."
-			send "&3/forums - Messages you our Forums Page."
-			send "&3/discord - Messages you our Official Discord Server."
-			send "&3/apply - Messages you the link to apply for staff."
-			send "&3/tags - Changes or Disables your Current Prefix."
-			send "&3/report <user> - Reports a user to the staff."
 			send "&3/donorchat <message> - Chat in the donor's only chat!"
 		if player has permission "op":
 			send "&c/forest - Spams chat with ForestHunters pro... demotion."
@@ -478,19 +455,6 @@ command /forums:
 command /apply:
 	trigger:
 		send "{@prefix} &cClick <link:http://bit.ly/SinisterNetworkApplication>&4here<reset> &cto apply!"
-
-command /donorchat [<text>]:
-	aliases: /dc
-	permission: donor
-	trigger:
-		if arg-1 is not set:
-			send "&c/sc (message)"
-		else:
-			if player has permission "donor":
-				sendToDonor(colored arg-1, player)
-function sendToDonor(msg: text, p: player):
-	set {_fun} to uuid of {_p}
-	send "&6[DONOR] %{rank.%{rank::%{_fun}%}%}%%{_p}%&f: %{_msg}%" to all players where [input has permission "donor"]
 
 
 	# Staff Commands
