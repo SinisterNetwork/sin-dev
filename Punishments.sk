@@ -1,5 +1,5 @@
 	# Punishments
-	# Version 1.0
+	# Version 1.0.1
 	# Created by ThatOneTqnk
 
 options:
@@ -48,7 +48,7 @@ on chat:
 
 
 command /warn [<offline player>] [<text>]:
-	permission: staff.warn
+	permission: staff
 	trigger:
 		if arg-1 is not set:
 			set {_dab} to true
@@ -63,7 +63,7 @@ command /warn [<offline player>] [<text>]:
 			send "&cPlayer is offline."
 
 command /revertwarn [<offline player>]:
-	permission: staff.warn
+	permission: staff
 	trigger:
 		if arg-1 is not set:
 			set {_dab} to true
@@ -77,7 +77,7 @@ command /revertwarn [<offline player>]:
 
 command /kick [<offline player>] [<text>]:
 	permission message: {@perm}
-	permission: staff.kick
+	permission: staff
 	trigger:
 		if arg-1 is not set:
 			send "&c/kick <player> [reason]"
@@ -89,11 +89,11 @@ command /kick [<offline player>] [<text>]:
 			else:
 				kick arg-1
 				broadcast "&b%player% &7kicked &b%arg-1%"
-        else:
+		else:
 			send "&cPlayer is offline."
 
 command /ban [<offline player>] [<text>]:
-	permission: staff.ban
+	permission: staff
 	permission message: {@perm}
 	trigger:
 		set {_failure} to false
@@ -138,7 +138,7 @@ command /ban [<offline player>] [<text>]:
 
 
 command /mute [<offline player>] [<text>]:
-	permission: staff.mute
+	permission: staff
 	permission message: {@perm}
 	trigger:
 		if arg-1 is set:
@@ -214,7 +214,7 @@ command /mute [<offline player>] [<text>]:
 			send "&c/mute (player) [timespan] [reason]"
 
 command /unmute [<offline player>]:
-	permission: staff.unmute
+	permission: staff
 	permission message: {@perm}
 	trigger:
 		if arg-1 is set:
@@ -235,7 +235,7 @@ command /unmute [<offline player>]:
 			send "&c/unmute (player)"
 
 command /unban [<offline player>]:
-	permission: staff.unban
+	permission: staff
 	permission message: {@perm}
 	trigger:
 		set {_failure} to false
