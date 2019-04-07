@@ -45,13 +45,15 @@ every second:
 			set loop-player tab name to "&7%loop-player%"
 
 on join:
-	teleport player to {spawn}
 	if {joined::%player's uuid%} is not set:
 		set {joined::%player's uuid%} to true
 		set {_msg} to "{@prefix} &4%player% &cWelcome to Sinister Network &4[##%number of all offline players%]"
 	else if {joined::%player's uuid%} is set:
 		set {_msg} to "{@prefix} &4%player% &chas joined the server."
 	set join message to {_msg}
+
+on death:
+	teleport player to the location (52, 10, 377) in world "world"
 
 on quit:
 	set quit message to ""
@@ -91,8 +93,6 @@ every 2 seconds:
 		set name of sidebar of loop-player to "{@ScoreboardName}"
 		set score "&6Welcome %loop-player%" in sidebar of loop-player to 9
 		set score " " in sidebar of loop-player to 8
-		set score "&cOur Discord: &4/discord" in sidebar of loop-player to 7
-		set score "&cForums: &4/forums" in sidebar of loop-player to 6
 		set score " " in sidebar of loop-player to 5
 		set {_online} to number of all players
 		set score "&c%{_online}%&4/10" in sidebar of loop-player to 4
@@ -153,6 +153,7 @@ command /rank [<offlineplayer>] [<text>]:
 					else if {rank.%arg 2%} is set:
 						set {rank::%arg 1's uuid%} to arg 2
 						send "&7You have updated &b%arg 1%'s &7rank to %{rank.%arg 2%}%"
+						execute console command "/pex user <player> <rank>"
 
 command /tp [<player>] [<player>]:
 	trigger:
@@ -561,3 +562,13 @@ command /autobc3:
 	permission: op
 	trigger:
 		broadcast "{@prefix} &6Stay up to date with Sinister Network, join the discord, do &C/discord"
+
+command /setdev:
+	permission: op
+	trigger:
+		set {dev} to location of player
+
+command /dev:
+	permission: op
+	trigger:
+		teleport player to {dev}
