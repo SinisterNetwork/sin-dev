@@ -13,7 +13,7 @@ on load:
     # through the function initMatches()
 
     # initGames("gamename", matchcount, minqueue, maxqueue)
-    initGames("skywars", 9, 1, 8)
+    initGames("skywars", 1, 2, 8)
     initGames("murder", 2, 3, 20)
     initGames("prison", 1, 1, 10)
     initGames("skyblock", 1, 1, 10)
@@ -41,6 +41,9 @@ function resetPlayerData(p: player):
         set {leplayer::%{_uuid}%} to {_p}
     if {leplayer::%{_uuid}%::nick} is not set:
         set {leplayer::%{_uuid}%::nick} to false
+    set {player::%{_p}%::game} to false
+    set {player::%{_p}%::gamedet} to false
+
 
 # ######
 # Util #
@@ -138,6 +141,8 @@ command /menu:
 
 command /leave:
     trigger:
+        if {player::%player%::game} is set:
+            pingGame({player::%player%::game}, {player::%player%::gamedet})
         removePlayerFromAllQueues(player)
         toSpawn(player)
         send "&7You were &cremoved &7from all queues."
@@ -202,6 +207,8 @@ function gameQueue(game: text, word: text, p: player):
         if {_game} is "skywars":
             generalReadyPlayer({_p})
             set {_matchnum} to {games::manager::%{_game}%::%{_word}%::label}
+            set {player::%{_p}%::game} to "skywars"
+            set {player::%{_p}%::gamedet} to {_matchnum}
             set {_init} to 500
             set {_by} to 200
             set {_multiplier} to {_matchnum} - 1
@@ -212,29 +219,102 @@ function gameQueue(game: text, word: text, p: player):
 
 function pingQueue(game: text, match: number):
     if size of {games::manager::%{_game}%::match%{_match}%::queued::*} >= {games::manager::%{_game}%::match%{_match}%::minqueue}:
-        if {games::manager::%{_game}%::match%{_match}%::state} < 3:
+        if {games::manager::%{_game}%::match%{_match}%::state} < 2:
             startGame({_game}, {_match})
 
 
 function startGame(game: text, match: number):
     broadcast "&cYou have joined Skywars!"
-    set {games::manager::%{_game}%::match%{_match}%::state} to 3
+    set {games::manager::%{_game}%::match%{_match}%::state} to 2
     set {_lex} to 459
     set {_ley} to 0
     set {_lez} to 452
     set {_epicgames} to {_match} - 1
     set {_epicgames} to {_epicgames} * 200
     add {_epicgames} to {_lez}
-    broadcast "%{_lez}%"
     wait 3 seconds
     execute console command "/setblock %{_lex}% %{_ley}% %{_lez}% structure_block 0 0 {metadata:"""",mirror:""NONE"",ignoreEntities:0b,powered:0b,seed:0L,author:"""",rotation:""NONE"",posX:0,mode:""LOAD"",posY:0,sizeX:32,posZ:1,integrity:1.0f,showair:0b,x:459,name:""1sw1"",y:0,z:452,id:""minecraft:structure_block"",sizeY:32,sizeZ:32,showboundingbox:1b}"
     wait 2 ticks
     console command "/setblock %{_lex}% %{_ley}% %({_lez} - 1)% redstone_block 0 0"
     wait 10 ticks
     console command "/fill %{_lex}% %{_ley}% %{_lez}% %{_lex}% %{_ley}% %({_lez} - 1)% air"
-    wait 3 seconds
-    # tsk tsk tsk
+    set {_sec} to 20
+    loop 20 times:
+        loop {games::manager::%{_game}%::match%{_match}%::queued::*}:
+            set {_yee} to "s"
+            if {_sec} = 1:
+                set {_yee} to ""
+            send "&6%{_sec}% &esecond%{_yee}%" to loop-value-2
+        remove 1 from {_sec}
+        wait 1 second
+    set {games::manager::%{_game}%::match%{_match}%::state} to 3
+    set {_iteration} to 0
+    loop {games::manager::%{_game}%::match%{_match}%::queued::*}:
+        set loop-value's gamemode to survival
+        if {_iteration} = 0:
+            set {_loc} to the location 548, 27.5, 503 in world "world"
+            set {_loc}'s yaw to 89.7
+            set {_loc}'s pitch to 5.7
+        else if {_iteration} = 1:
+            set {_loc} to the location 540, 27.5, 473 in world "world"
+            set {_loc}'s yaw to 50
+            set {_loc}'s pitch to 7.2
+        else if {_iteration} = 2:
+            set {_loc} to the location 510, 27.5, 463 in world "world"
+            set {_loc}'s yaw to 2.4
+            set {_loc}'s pitch to 5.4
+        else if {_iteration} = 3:
+            set {_loc} to the location 481, 27.5, 473 in world "world"
+            set {_loc}'s yaw to -46.5
+            set {_loc}'s pitch to 11.3
+        else if {_iteration} = 4:
+            set {_loc} to the location 571, 27.5, 503 in world "world"
+            set {_loc}'s yaw to -91.5
+            set {_loc}'s pitch to 3.6
+        else if {_iteration} = 5:
+            set {_loc} to the location 483, 27.5, 532 in world "world"
+            set {_loc}'s yaw to -137.1
+            set {_loc}'s pitch to 3.2
+        else if {_iteration} = 6:
+            set {_loc} to the location 511, 27.5, 542 in world "world"
+            set {_loc}'s yaw to 178.7
+            set {_loc}'s pitch to 2.6
+        else if {_iteration} = 7:
+            set {_loc} to the location 539, 27.5, 534 in world "world"
+            set {_loc}'s yaw to 137.1
+            set {_loc}'s pitch to 13.2
+        add 1 to {_iteration}
+        teleport loop-value to {_loc}
+        if {_iteration} > 7:
+            set {_iteration} to 0
 
+on death:
+    if {player::%victim%::game} is "skywars":
+        set victim's gamemode to adventure
+        toSpawn(victim)
+        removePlayerFromAllQueues(victim)
+        pingGame("skywars", {player::%victim%::gamedet})
+        resetPlayerData(victim)
+
+on quit:
+    if {player::%player%::game} is "skywars":
+        removePlayerFromAllQueues(player)
+        pingGame("skywars", {player::%player%::gamedet})
+        resetPlayerData(player)
+
+function pingGame(game: text, match: number):
+    if {_game} is "skywars":
+        if {games::manager::skywars::match%{_match}%::state} >= 3:
+            if size of {games::manager::skywars::match%{_match}%::queued::*} <= 1:
+                loop {games::manager::skywars::match%{_match}%::queued::*}:
+                    set {_winner} to loop-value
+                    generalReadyPlayer(loop-value)
+                    toSpawn(loop-value)
+                    resetPlayerData(loop-value)
+                    removePlayerFromAllQueues(loop-value)
+                broadcast "&8[&c&lSinister &4&lNetwork&8] &6%{_winner}% &6won SkyWars!"
+                clear {games::manager::skywars::match%{_match}%::queued::*}
+                set {games::manager::skywars::match%{_match}%::state} to 0
 
 function addToQueue(p: player, game: text, match: text):
     add {_p} to {games::manager::%{_game}%::%{_match}%::queued::*}
