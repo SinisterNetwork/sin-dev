@@ -1,6 +1,6 @@
 options:
 #Teleport players to spawn whenever they join
-	TPJoin: false
+	TPJoin: true
 #Announce the new players when they join for the first time
 	FirstJoin: true
 #Hide join Messages
@@ -18,7 +18,7 @@ command /setspawn:
 		set {spawn} to location of player
 
 command /spawn [<player>]:
-	aliases: /stuck
+	aliases: /stuck , /return
 	trigger:
 		if {spawn} isn't set:
 			message "&4Error:&c spawn is not set!"
@@ -48,14 +48,14 @@ command /delspawn:
 		message "&6You have successfully unset &cspawn6!"
 
 
-on first join:
+on First Join:
 	teleport player to {spawn}
 	if {@FirstJoin} is true:
 		broadcast "&dPlease welcome player &9%player's display name% &dhe/she have joined the server for the first time."
 	else:
 		stop
 
-on join:
+on Join:
 	if {@JoinMessage} is true:
 		set join message to ""
 		stop
@@ -69,9 +69,12 @@ on join:
 	else:
 		stop
 
-on quit:
+on Quit:
 	if {@QuitMessage} is true:
 		set leave message to ""
 		stop
 	else:
 		stop
+
+on Respawn:
+	teleport player to {spawn}
