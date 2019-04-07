@@ -19,6 +19,7 @@ command /setspawn:
 
 command /spawn [<player>]:
 	aliases: /stuck , /return
+	permission: op
 	trigger:
 		if {spawn} isn't set:
 			message "&4Error:&c spawn is not set!"
@@ -75,6 +76,3 @@ on Quit:
 		stop
 	else:
 		stop
-
-on Respawn:
-	teleport player to {spawn}
