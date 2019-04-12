@@ -15,8 +15,7 @@ on load:
     # initGames("gamename", matchcount, minqueue, maxqueue)
     initGames("skywars", 1, 2, 8)
     initGames("murder", 2, 3, 20)
-    initGames("prison", 1, 1, 10)
-    initGames("skyblock", 1, 1, 10)
+    initGames("hunger", 2, 5, 12)
 
     # this just applies the function resetPlayerData() to all players
     # resetPlayerData seems to just setup a list variable per player
@@ -82,8 +81,7 @@ function resetGameCore():
     set {games::repo} to true
     add "skywars" to {games::repo::*}
     add "murder" to {games::repo::*}
-    add "prison" to {games::repo::*}
-    add "skyblock" to {games::repo::*}
+    add "hunger" to {games::repo::*}
 
 function initGames(game: text, count: number, minqueue: number, maxqueue: number):
     if {games::repo::*} contains {_game}:
@@ -91,22 +89,16 @@ function initGames(game: text, count: number, minqueue: number, maxqueue: number
         initMatches({_game}, {_count}, {_minqueue}, {_maxqueue})
         if {_game} is "skywars":
             set {_itemp} to diamond named "&6Skywars!"
-            set line 1 of {_itemp}'s lore to "&7Engage in &acompetitive battle!"
+            set line 1 of {_itemp}'s lore to "&8&l[&4&lBETA&8&l] &7Engage in &acompetitive battle!"
             set {games::manager::skywars::item} to {_itemp}
         else if {_game} is "murder":
             set {_itemp} to iron sword named "&6Murder Mystery!"
             set line 1 of {_itemp}'s lore to "&cComing Soon!"
             set {games::manager::murder::item} to {_itemp}
-        else if {_game} is "prison":
-            set {_itemp} to diamond_ore named "&6Prison"
-            set line 1 of {_itemp}'s lore to "&cComing Soon!"
-            set {games::manager::prison::item} to {_itemp}
-        else if {_game} is "skyblock":
-            set {_itemp} to grass_block named "&6Skyblock"
-            set line 1 of {_itemp}'s lore to "&cComing Soon"
-            set {games::manager::skyblock::item} to {_itemp}
         else if {_game} is "hunger":
-            set {_itemp} to diamond_sword
+            set {_itemp} to diamond chestplate named "&6Hunger Games"
+            set line 1 of {_itemp}'s lore to "&cComing Soon!"
+            set {games::manager::hunger::item} to {_itemp}
 
 function initMatches(game: text, count: number, minqueue: number, maxqueue: number):
     set {_start} to 1
@@ -124,10 +116,8 @@ function translateShortToLong(game: text) :: text:
         return "Skywars!"
     else if {_game} is "murder":
         return "Murder Mystery!"
-    else if {_game} is "prison":
-        return "Prison!"
-    else if {_game} is "skyblock":
-        return "Skyblock!"
+    else if {_game} is "hunger":
+        return "Hunger Games!"
 
 # ok so this is an entry point for the code as well
 # because people can open up a menu and trigger different parts
@@ -224,7 +214,6 @@ function pingQueue(game: text, match: number):
 
 
 function startGame(game: text, match: number):
-    broadcast "&cYou have joined Skywars!"
     set {games::manager::%{_game}%::match%{_match}%::state} to 2
     set {_lex} to 459
     set {_ley} to 0
