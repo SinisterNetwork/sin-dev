@@ -1,5 +1,6 @@
 options:
 	prefix: &8[&c&lSinister &4&lNetwork&8]
+	permission: &fUnknown Command. Type "/help" for help.
 	ScoreboardName: &c&lSinister &4&lNetwork
 
 on load:
@@ -22,7 +23,7 @@ on load:
 
 every second:
 	loop all players:
-		set tab header to "&8&m------------------%nl%&r       &c&lSinister &4&lNetwork    %nl%   &6Beta Version 1.0%nl%&8&m------------------" and footer to "&8&m------------------" for loop-player
+		set tab header to "&8&m------------------%nl%&r       &c&lSinister &4&lNetwork    %nl%   &6Beta Version 1.0%nl%&8&m------------------" and footer to "&8&m------------------ %nl% &8&l[&c&lBeta&8&l] &cSkywars, public beta released! %nl% &8&m------------------" for loop-player
 		set loop-player tab name to "&7%loop-player%"
 		if {tag::%loop-player's uuid%} is set:
 			if {tag.%{tag::%loop-player's uuid%}%} is not set:
@@ -91,11 +92,11 @@ every 2 seconds:
 	loop all players:
 		wipe loop-player's sidebar
 		set name of sidebar of loop-player to "{@ScoreboardName}"
-		set score "&6Welcome %loop-player%" in sidebar of loop-player to 9
-		set score " " in sidebar of loop-player to 8
-		set score " " in sidebar of loop-player to 5
+		set score "&6Welcome %loop-player%" in sidebar of loop-player to 15
+		set score "&a" in sidebar of loop-player to 14
 		set {_online} to number of all players
-		set score "&c%{_online}%&4/10" in sidebar of loop-player to 4
+		set score "&6Online Players: &c%{_online}%&4/15" in sidebar of loop-player to 13
+		set score "&7&oSinNetwork.minehut.gg" in sidebar of loop-player to 12
 
 on hunger meter change:
 	cancel event
@@ -136,7 +137,7 @@ command /tags [<text>]:
 command /rank [<offlineplayer>] [<text>]:
 	aliases: /setrank
 	permission: admin
-	permission message: &cYou don't have access to that command.
+	permission message: {@permission}
 	trigger:
 		if arg 2 is not set:
 			send "&c/rank <player> <rank>"
@@ -167,7 +168,7 @@ command /tp [<player>] [<player>]:
 						teleport player to arg-1
 						message "&8&l[&c&lSinister &4&lNetwork&8&l] &e&lTeleporting &a&l%arg-1% &e&lto &a&l%arg-2%"
 					if player doesn't have permission "staff.tphere":
-						message "&cYou don't have access to that command"
+						message "Unknown Command. Type /help for help."
 			else:
 				set {_fail} to true
 		else:
@@ -176,11 +177,11 @@ command /tp [<player>] [<player>]:
 			if player has permission "staff.tphere":
 				message "&8&l[&c&lSinister &4&lNetwork&8&l] &cUsage: /tp [player] [player]"
 			if player doesn't have permission "staff.tphere":
-				message "&cYou don't have access to that command"
+				message "Unknown Command. Type /help for help."
 
 command /gmc [<offlineplayer>] [<text>]:
 	permission: staff.gmc
-	permission message: &cYou don't have access to that command
+	permission message: {@permission}
 	trigger:
 		if arg 1 is not set:
 			set player's gamemode to creative
@@ -194,7 +195,7 @@ command /gmc [<offlineplayer>] [<text>]:
 
 command /gms [<offlineplayer>] [<text>]:
 	permission: staff.gms
-	permission message: &cYou don't have access to that command
+	permission message: {@permission}
 	trigger:
 		if arg 1 is not set:
 			set player's gamemode to survival
@@ -208,7 +209,7 @@ command /gms [<offlineplayer>] [<text>]:
 
 command /gma [<offlineplayer>] [<text>]:
 	permission: admin
-	permission message: &cYou don't have access to that command
+	permission message: {@permission}
 	trigger:
 		if arg 1 is not set:
 			set player's gamemode to adventure
@@ -222,7 +223,7 @@ command /gma [<offlineplayer>] [<text>]:
 
 command /gmsp [<offlineplayer>] [<text>]:
 	permission: staff.gmsp
-	permission message: &cYou don't have access to that command
+	permission message: {@permission}
 	trigger:
 		if arg 1 is not set:
 			set player's gamemode to spectator
@@ -236,7 +237,7 @@ command /gmsp [<offlineplayer>] [<text>]:
 
 command /heal [<offlineplayer>] [<text>]:
 	permission: staff.heal
-	permission message: {@prefix} &cYou don't have access to that command
+	permission message: {@permission}
 	trigger:
 		if arg 1 is not set:
 			set player's health to 10
@@ -250,7 +251,7 @@ command /heal [<offlineplayer>] [<text>]:
 
 command /feed [<offlineplayer>] [<text>]:
 	permission: staff.feed
-	permission message: {@prefix} &cYou don't have access to that command
+	permission message: {@permission}
 	trigger:
 		if arg 1 is not set:
 			set player's hunger to 10
@@ -418,36 +419,10 @@ command /report <player> <text>:
 		wait 1 seconds
 		send "{@prefix} &cStaff have been notified."
 
-command /nick [<text>]:
-	aliases: /setnick
-	permission: donor
-	permission message: &cYou need to be at least &b[MVP] rank to use this command.
-	trigger:
-		set {_uuid} to uuid of player
-		if {leplayer::%{_uuid}%::nick} is not set:
-			send "&cAn error occurred. Contact an administrator"
-		else:
-			if arg-1 is not set:
-				set {_whattodo} to "remove"
-			else if arg-1 is "off" or "remove":
-				set {_whattodo} to "remove"
-			else if length of arg-1 is more than 16:
-				set {_whattodo} to "toolong"
-			else:
-				set {_whattodo} to "add"
-			if {_whattodo} is "remove":
-				set {leplayer::%{_uuid}%::nick} to false
-				send "&7You have &cunset &7your &6nickname."
-			else if {_whattodo} is "toolong":
-				send "&cThe nickname can not be longer than 16 characters."
-			else if {_whattodo} is "add":
-				set {leplayer::%{_uuid}%::nick} to uncolored arg-1
-				send "&7You have set your nickname to &e%arg-1%"
-
 
 command /discord:
 	trigger:
-		send "{@prefix} &cJoin the discord <link:https://discord.gg/XFKyxnV>&chere<reset>"
+		send "{@prefix} &cJoin the discord <link:https://discord.gg/Zp6rBz3>&chere<reset>"
 
 command /forums:
 	trigger:
@@ -464,7 +439,7 @@ command /apply:
 command /vanish [<text>]:
 	aliases: /v
 	permission: staff
-	permission message: &cYou don't have access to that command.
+	permission message: {@permission}
 	trigger:
 		if {vanish::%player's uuid%} is not set:
 			set {vanish::%player's uuid%} to true
@@ -480,7 +455,7 @@ command /vanish [<text>]:
 command /broadcast [<text>]:
 	aliases: /bc
 	permission: admin
-	permission message: &cYou don't have access to that command
+	permission message: {@permission}
 	trigger:
 		if arg 1 is not set:
 			send "&cYo, you need a message too!"
@@ -505,7 +480,7 @@ command /pc [<text>]:
 			broadcast "{@prefix} &f%arg 1%"
 
 command /staffchat [<text>]:
-	aliases: /sc
+	aliases: /osc
 	permission: staff
 	trigger:
 		if arg-1 is not set:
@@ -572,3 +547,27 @@ command /dev:
 	permission: op
 	trigger:
 		teleport player to {dev}
+
+command /clearlag:
+	trigger:
+		loop all dropped items:
+			delete loop-value
+		wait 1 tick
+		send "{@prefix} &6Lag has been cleared!"
+
+command /soon:
+	trigger:
+		send "&c&lComing Soon"
+
+on right click on player:
+	if name of event-entity = "&cMain &4Menu":
+		cancel event
+		execute player command "menu"
+
+on right click on player:
+	if name of event-entity = "&6Skywars Kits":
+		cancel event
+		execute player command "soon"
+
+on Death:
+	execute console command "effects %player% clear"
